@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruções - Powers of Ten</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: #f5f5f5;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        
+        .example {
+            background: #fff;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        code {
+            background: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        .start-button {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            margin: 20px 0;
+            transition: background 0.3s;
+        }
+        
+        .start-button:hover {
+            background: #2980b9;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #34495e;
+            color: white;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .tip {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌌 Powers of Ten - Instruções de Uso</h1>
+    
+    <a href="index.html" class="start-button">▶ Iniciar Aplicação</a>
+    
+    <h2>📖 Sobre o Projeto</h2>
+    <p>
+        Esta aplicação é uma visualização interativa inspirada no clássico filme "Powers of Ten" de Charles e Ray Eames.
+        Explore diferentes escalas do universo, desde moléculas microscópicas até superaglomerados galácticos.
+    </p>
+    
+    <h2>🚀 Início Rápido</h2>
+    
+    <div class="tip">
+        <strong>💡 Dica:</strong> Para uma melhor experiência, execute a aplicação num servidor web local.
+    </div>
+    
+    <div class="example">
+        <h3>Opção 1: Python (recomendado)</h3>
+        <pre>cd /home/paulo/code/scaleswebgl
+python -m http.server 8000</pre>
+        <p>Depois abra: <code>http://localhost:8000</code></p>
+    </div>
+    
+    <div class="example">
+        <h3>Opção 2: Node.js</h3>
+        <pre>npx http-server</pre>
+    </div>
+    
+    <div class="example">
+        <h3>Opção 3: PHP</h3>
+        <pre>php -S localhost:8000</pre>
+    </div>
+    
+    <h2>🎮 Controlos</h2>
+    
+    <table>
+        <tr>
+            <th>Controlo</th>
+            <th>Função</th>
+        </tr>
+        <tr>
+            <td><strong>▶ Play / ⏸ Pause</strong></td>
+            <td>Inicia ou pausa a animação automática</td>
+        </tr>
+        <tr>
+            <td><strong>↻ Reset</strong></td>
+            <td>Volta para a primeira escala (DNA)</td>
+        </tr>
+        <tr>
+            <td><strong>← Anterior</strong></td>
+            <td>Navega para a escala anterior</td>
+        </tr>
+        <tr>
+            <td><strong>Seguinte →</strong></td>
+            <td>Navega para a próxima escala</td>
+        </tr>
+        <tr>
+            <td><strong>Barra de Velocidade</strong></td>
+            <td>Ajusta a velocidade da animação (0.1x a 3.0x)</td>
+        </tr>
+        <tr>
+            <td><strong>Rotação Automática</strong></td>
+            <td>Ativa/desativa a rotação dos objetos</td>
+        </tr>
+        <tr>
+            <td><strong>Modo Wireframe</strong></td>
+            <td>Alterna entre wireframe e sólido</td>
+        </tr>
+    </table>
+    
+    <h3>Atalhos de Teclado</h3>
+    <table>
+        <tr>
+            <th>Tecla</th>
+            <th>Ação</th>
+        </tr>
+        <tr>
+            <td><strong>Espaço</strong></td>
+            <td>Play/Pause</td>
+        </tr>
+        <tr>
+            <td><strong>← (Seta Esquerda)</strong></td>
+            <td>Escala anterior</td>
+        </tr>
+        <tr>
+            <td><strong>→ (Seta Direita)</strong></td>
+            <td>Próxima escala</td>
+        </tr>
+        <tr>
+            <td><strong>R</strong></td>
+            <td>Reset</td>
+        </tr>
+    </table>
+    
+    <h2>🎨 Personalizar Objetos</h2>
+    
+    <p>Você pode facilmente adicionar, remover ou modificar objetos editando o arquivo <code>config.json</code>:</p>
+    
+    <pre>{
+  "scaleFactor": 1000,
+  "transitionDuration": 3.0,
+  "scales": [
+    {
+      "name": "Seu Objeto",
+      "scale": 1.0,
+      "size": "1 metro",
+      "model": "models/seuobjeto.obj",
+      "color": [1.0, 0.5, 0.2],
+      "description": "Descrição"
+    }
+  ]
+}</pre>
+    
+    <h3>Propriedades Configuráveis</h3>
+    
+    <table>
+        <tr>
+            <th>Propriedade</th>
+            <th>Descrição</th>
+            <th>Exemplo</th>
+        </tr>
+        <tr>
+            <td><strong>scaleFactor</strong></td>
+            <td>Fator de multiplicação entre escalas</td>
+            <td><code>100</code>, <code>1000</code></td>
+        </tr>
+        <tr>
+            <td><strong>transitionDuration</strong></td>
+            <td>Duração das transições em segundos</td>
+            <td><code>2.0</code>, <code>3.0</code></td>
+        </tr>
+        <tr>
+            <td><strong>name</strong></td>
+            <td>Nome do objeto (exibido na UI)</td>
+            <td><code>"Molécula de DNA"</code></td>
+        </tr>
+        <tr>
+            <td><strong>scale</strong></td>
+            <td>Tamanho real em metros</td>
+            <td><code>1e-9</code>, <code>1.8</code></td>
+        </tr>
+        <tr>
+            <td><strong>size</strong></td>
+            <td>Descrição legível do tamanho</td>
+            <td><code>"2 nanómetros"</code></td>
+        </tr>
+        <tr>
+            <td><strong>model</strong></td>
+            <td>Caminho para arquivo OBJ</td>
+            <td><code>"models/dna.obj"</code></td>
+        </tr>
+        <tr>
+            <td><strong>color</strong></td>
+            <td>Cor RGB (0.0 a 1.0)</td>
+            <td><code>[0.2, 0.8, 0.2]</code></td>
+        </tr>
+        <tr>
+            <td><strong>description</strong></td>
+            <td>Descrição do objeto</td>
+            <td><code>"Dupla hélice de DNA"</code></td>
+        </tr>
+    </table>
+    
+    <h2>📐 Adicionar Modelos OBJ</h2>
+    
+    <div class="example">
+        <h3>Passo 1: Criar/Obter o Modelo</h3>
+        <p>Você pode criar modelos OBJ usando software como:</p>
+        <ul>
+            <li><strong>Blender</strong> (gratuito e open-source)</li>
+            <li><strong>SketchUp</strong></li>
+            <li><strong>3ds Max</strong></li>
+            <li><strong>Maya</strong></li>
+        </ul>
+    </div>
+    
+    <div class="example">
+        <h3>Passo 2: Exportar como OBJ</h3>
+        <p>Certifique-se de exportar apenas a geometria (vértices e faces). O sistema converte automaticamente faces em linhas para o modo wireframe.</p>
+    </div>
+    
+    <div class="example">
+        <h3>Passo 3: Colocar na Pasta models/</h3>
+        <pre>scaleswebgl/
+└── models/
+    ├── dna.obj
+    ├── earth.obj
+    ├── building.obj
+    └── seuobjeto.obj  ← Novo modelo</pre>
+    </div>
+    
+    <div class="example">
+        <h3>Passo 4: Atualizar config.json</h3>
+        <pre>{
+  "name": "Seu Objeto",
+  "scale": 1.0,
+  "size": "1 metro",
+  "model": "models/seuobjeto.obj",
+  "color": [1.0, 0.5, 0.2],
+  "description": "Descrição do seu objeto"
+}</pre>
+    </div>
+    
+    <h2>🔧 Geometria Procedural</h2>
+    
+    <p>Se um modelo OBJ não estiver disponível, o sistema gera automaticamente geometria procedural baseada no nome do objeto:</p>
+    
+    <table>
+        <tr>
+            <th>Palavra-chave no Nome</th>
+            <th>Geometria Gerada</th>
+        </tr>
+        <tr>
+            <td>dna, molécula</td>
+            <td>Dupla hélice</td>
+        </tr>
+        <tr>
+            <td>vírus</td>
+            <td>Icosaedro</td>
+        </tr>
+        <tr>
+            <td>célula, grão</td>
+            <td>Esfera</td>
+        </tr>
+        <tr>
+            <td>edifício, cubo</td>
+            <td>Cubo</td>
+        </tr>
+        <tr>
+            <td>galáxia, via</td>
+            <td>Espiral</td>
+        </tr>
+        <tr>
+            <td>sistema</td>
+            <td>Torus</td>
+        </tr>
+        <tr>
+            <td>(outros)</td>
+            <td>Esfera (padrão)</td>
+        </tr>
+    </table>
+    
+    <div class="tip">
+        <strong>💡 Dica:</strong> Use a geometria procedural para prototipar rapidamente antes de criar modelos OBJ detalhados.
+    </div>
+    
+    <h2>📊 Escalas Pré-configuradas</h2>
+    
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Objeto</th>
+            <th>Escala</th>
+            <th>Tamanho</th>
+        </tr>
+        <tr><td>1</td><td>Molécula de DNA</td><td>10⁻⁹ m</td><td>2 nanómetros</td></tr>
+        <tr><td>2</td><td>Vírus</td><td>10⁻⁶ m</td><td>100 nanómetros</td></tr>
+        <tr><td>3</td><td>Célula</td><td>10⁻⁵ m</td><td>10 micrómetros</td></tr>
+        <tr><td>4</td><td>Grão de Areia</td><td>10⁻³ m</td><td>1 milímetro</td></tr>
+        <tr><td>5</td><td>Mão Humana</td><td>0.2 m</td><td>20 centímetros</td></tr>
+        <tr><td>6</td><td>Pessoa</td><td>1.8 m</td><td>1.8 metros</td></tr>
+        <tr><td>7</td><td>Edifício</td><td>100 m</td><td>100 metros</td></tr>
+        <tr><td>8</td><td>Cidade</td><td>10⁴ m</td><td>10 quilómetros</td></tr>
+        <tr><td>9</td><td>Terra</td><td>1.27×10⁷ m</td><td>12,742 km</td></tr>
+        <tr><td>10</td><td>Sistema Solar</td><td>10¹³ m</td><td>10 mil milhões de km</td></tr>
+        <tr><td>11</td><td>Via Láctea</td><td>10²¹ m</td><td>100,000 anos-luz</td></tr>
+        <tr><td>12</td><td>Superaglomerado</td><td>10²⁴ m</td><td>500 milhões de anos-luz</td></tr>
+    </table>
+    
+    <h2>⚙️ Requisitos Técnicos</h2>
+    
+    <div class="warning">
+        <strong>⚠️ Atenção:</strong> Esta aplicação requer um navegador moderno com suporte a WebGL.
+    </div>
+    
+    <h3>Navegadores Compatíveis</h3>
+    <ul>
+        <li>✅ Google Chrome 9+</li>
+        <li>✅ Mozilla Firefox 4+</li>
+        <li>✅ Safari 5.1+</li>
+        <li>✅ Microsoft Edge</li>
+        <li>✅ Opera 12+</li>
+    </ul>
+    
+    <h3>Verificar Suporte WebGL</h3>
+    <p>Visite <a href="https://get.webgl.org/" target="_blank">get.webgl.org</a> para verificar se o seu navegador suporta WebGL.</p>
+    
+    <h2>🐛 Resolução de Problemas</h2>
+    
+    <div class="example">
+        <h3>Tela preta ao carregar</h3>
+        <ul>
+            <li>Abra o console do navegador (F12) e verifique erros</li>
+            <li>Certifique-se de que está usando um servidor web (não <code>file://</code>)</li>
+            <li>Verifique se o navegador suporta WebGL</li>
+        </ul>
+    </div>
+    
+    <div class="example">
+        <h3>Modelos OBJ não carregam</h3>
+        <ul>
+            <li>Verifique o caminho no <code>config.json</code></li>
+            <li>Confirme que o arquivo existe na pasta <code>models/</code></li>
+            <li>O sistema usará geometria procedural como fallback</li>
+        </ul>
+    </div>
+    
+    <div class="example">
+        <h3>Performance baixa</h3>
+        <ul>
+            <li>Reduza a complexidade dos modelos OBJ (&lt; 10,000 vértices)</li>
+            <li>Diminua o número de escalas</li>
+            <li>Use geometria procedural em vez de modelos OBJ complexos</li>
+            <li>Feche outras abas do navegador</li>
+        </ul>
+    </div>
+    
+    <h2>📚 Estrutura de Arquivos</h2>
+    
+    <pre>scaleswebgl/
+├── index.html              # Página principal da aplicação
+├── instructions.html       # Este arquivo de instruções
+├── config.json            # Configuração das escalas
+├── README.md              # Documentação técnica
+├── js/
+│   ├── main.js            # Aplicação principal
+│   ├── renderer.js        # Sistema de renderização WebGL
+│   ├── animation.js       # Controlador de animação
+│   ├── scaleobject.js     # Classe de objetos de escala
+│   ├── objloader.js       # Carregador de arquivos OBJ
+│   └── gl-matrix-min.js   # Biblioteca de matemática 3D
+└── models/                # Modelos OBJ (opcional)
+    ├── dna.obj            # Exemplo: DNA
+    ├── earth.obj          # Exemplo: Terra
+    └── building.obj       # Exemplo: Edifício</pre>
+    
+    <h2>🎓 Conceitos Educacionais</h2>
+    
+    <p>Esta aplicação é ideal para:</p>
+    <ul>
+        <li>📚 <strong>Educação</strong>: Ensinar sobre escalas e magnitudes</li>
+        <li>🔬 <strong>Ciência</strong>: Visualizar diferentes níveis de organização</li>
+        <li>🎨 <strong>Arte</strong>: Explorar perspectivas visuais</li>
+        <li>💻 <strong>Programação</strong>: Aprender WebGL e animação 3D</li>
+    </ul>
+    
+    <h2>🚀 Próximos Passos</h2>
+    
+    <ol>
+        <li>Inicie um servidor web local</li>
+        <li>Abra <code>index.html</code> no navegador</li>
+        <li>Explore as diferentes escalas</li>
+        <li>Personalize o <code>config.json</code> conforme necessário</li>
+        <li>Adicione seus próprios modelos OBJ</li>
+        <li>Experimente diferentes cores e velocidades</li>
+    </ol>
+    
+    <div style="text-align: center; margin: 40px 0;">
+        <a href="index.html" class="start-button">▶ Começar Agora</a>
+    </div>
+    
+    <hr style="margin: 40px 0;">
+    
+    <footer style="text-align: center; color: #7f8c8d;">
+        <p><strong>Powers of Ten - WebGL</strong></p>
+        <p>Inspirado no filme de Charles e Ray Eames (1977)</p>
+        <p>Desenvolvido para exploração educacional e científica</p>
+    </footer>
+</body>
+</html>

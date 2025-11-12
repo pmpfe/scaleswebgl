@@ -1,0 +1,102 @@
+{
+  "scaleFactor": 1000,
+  "transitionDuration": 3.0,
+  "scales": [
+    {
+      "name": "Molécula de DNA",
+      "scale": 1e-9,
+      "size": "2 nanómetros",
+      "model": "models/dna.obj",
+      "color": [0.2, 0.8, 0.2],
+      "description": "Dupla hélice de DNA"
+    },
+    {
+      "name": "Vírus",
+      "scale": 1e-6,
+      "size": "100 nanómetros",
+      "model": "models/virus.obj",
+      "color": [0.8, 0.2, 0.2],
+      "description": "Bacteriófago"
+    },
+    {
+      "name": "Célula",
+      "scale": 1e-5,
+      "size": "10 micrómetros",
+      "model": "models/cell.obj",
+      "color": [0.2, 0.6, 0.8],
+      "description": "Célula eucariota"
+    },
+    {
+      "name": "Grão de Areia",
+      "scale": 1e-3,
+      "size": "1 milímetro",
+      "model": "models/sand.obj",
+      "color": [0.9, 0.8, 0.5],
+      "description": "Grão de areia de quartzo"
+    },
+    {
+      "name": "Mão Humana",
+      "scale": 0.2,
+      "size": "20 centímetros",
+      "model": "models/hand.obj",
+      "color": [0.9, 0.7, 0.6],
+      "description": "Mão adulta"
+    },
+    {
+      "name": "Pessoa",
+      "scale": 1.8,
+      "size": "1.8 metros",
+      "model": "models/person.obj",
+      "color": [0.7, 0.7, 0.9],
+      "description": "Ser humano adulto"
+    },
+    {
+      "name": "Edifício",
+      "scale": 100,
+      "size": "100 metros",
+      "model": "models/building.obj",
+      "color": [0.5, 0.5, 0.5],
+      "description": "Arranha-céus"
+    },
+    {
+      "name": "Cidade",
+      "scale": 10000,
+      "size": "10 quilómetros",
+      "model": "models/city.obj",
+      "color": [0.6, 0.6, 0.3],
+      "description": "Área urbana"
+    },
+    {
+      "name": "Terra",
+      "scale": 12742000,
+      "size": "12,742 km",
+      "model": "models/earth.obj",
+      "color": [0.2, 0.4, 0.8],
+      "description": "Planeta Terra"
+    },
+    {
+      "name": "Sistema Solar",
+      "scale": 1e13,
+      "size": "10 mil milhões de km",
+      "model": "models/solarsystem.obj",
+      "color": [0.9, 0.6, 0.2],
+      "description": "Sol e planetas"
+    },
+    {
+      "name": "Via Láctea",
+      "scale": 1e21,
+      "size": "100,000 anos-luz",
+      "model": "models/galaxy.obj",
+      "color": [0.8, 0.8, 0.9],
+      "description": "Nossa galáxia"
+    },
+    {
+      "name": "Superaglomerado",
+      "scale": 1e24,
+      "size": "500 milhões de anos-luz",
+      "model": "models/supercluster.obj",
+      "color": [0.6, 0.3, 0.8],
+      "description": "Aglomerado de galáxias"
+    }
+  ]
+}

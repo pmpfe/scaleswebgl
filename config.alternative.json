@@ -1,0 +1,102 @@
+{
+  "scaleFactor": 100,
+  "transitionDuration": 2.5,
+  "scales": [
+    {
+      "name": "Átomo de Carbono",
+      "scale": 1e-10,
+      "size": "0.1 nanómetros",
+      "model": "models/atom.obj",
+      "color": [0.3, 0.9, 0.3],
+      "description": "Átomo individual de carbono"
+    },
+    {
+      "name": "Molécula de Água",
+      "scale": 1e-9,
+      "size": "1 nanómetro",
+      "model": "models/water.obj",
+      "color": [0.2, 0.6, 0.9],
+      "description": "H2O - molécula de água"
+    },
+    {
+      "name": "Proteína",
+      "scale": 1e-8,
+      "size": "10 nanómetros",
+      "model": "models/protein.obj",
+      "color": [0.9, 0.3, 0.3],
+      "description": "Proteína enovelada"
+    },
+    {
+      "name": "Bactéria",
+      "scale": 1e-6,
+      "size": "1 micrómetro",
+      "model": "models/bacteria.obj",
+      "color": [0.4, 0.8, 0.4],
+      "description": "Célula bacteriana"
+    },
+    {
+      "name": "Ponta de Agulha",
+      "scale": 1e-4,
+      "size": "100 micrómetros",
+      "model": "models/needle.obj",
+      "color": [0.8, 0.8, 0.8],
+      "description": "Ponta de uma agulha"
+    },
+    {
+      "name": "Formiga",
+      "scale": 0.005,
+      "size": "5 milímetros",
+      "model": "models/ant.obj",
+      "color": [0.3, 0.2, 0.1],
+      "description": "Formiga comum"
+    },
+    {
+      "name": "Bola de Futebol",
+      "scale": 0.22,
+      "size": "22 centímetros",
+      "model": "models/football.obj",
+      "color": [1.0, 1.0, 1.0],
+      "description": "Bola de futebol oficial"
+    },
+    {
+      "name": "Carro",
+      "scale": 4.5,
+      "size": "4.5 metros",
+      "model": "models/car.obj",
+      "color": [0.8, 0.1, 0.1],
+      "description": "Automóvel médio"
+    },
+    {
+      "name": "Estádio",
+      "scale": 250,
+      "size": "250 metros",
+      "model": "models/stadium.obj",
+      "color": [0.6, 0.6, 0.6],
+      "description": "Estádio de futebol"
+    },
+    {
+      "name": "Montanha",
+      "scale": 8848,
+      "size": "8,848 metros",
+      "model": "models/mountain.obj",
+      "color": [0.5, 0.4, 0.3],
+      "description": "Monte Evereste"
+    },
+    {
+      "name": "Lua",
+      "scale": 3474000,
+      "size": "3,474 km",
+      "model": "models/moon.obj",
+      "color": [0.7, 0.7, 0.7],
+      "description": "Satélite natural da Terra"
+    },
+    {
+      "name": "Júpiter",
+      "scale": 139820000,
+      "size": "139,820 km",
+      "model": "models/jupiter.obj",
+      "color": [0.9, 0.7, 0.5],
+      "description": "Maior planeta do Sistema Solar"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+# Exemplo: Cubo simples (edifício)
+
+# Vértices
+v -1.0 -1.0  1.0
+v  1.0 -1.0  1.0
+v  1.0  1.0  1.0
+v -1.0  1.0  1.0
+v -1.0 -1.0 -1.0
+v  1.0 -1.0 -1.0
+v  1.0  1.0 -1.0
+v -1.0  1.0 -1.0
+
+# Arestas da face frontal
+l 1 2
+l 2 3
+l 3 4
+l 4 1
+
+# Arestas da face traseira
+l 5 6
+l 6 7
+l 7 8
+l 8 5
+
+# Arestas conectando frente e trás
+l 1 5
+l 2 6
+l 3 7
+l 4 8
+
+# Diagonais internas (opcional, para mais detalhes)
+l 1 7
+l 2 8

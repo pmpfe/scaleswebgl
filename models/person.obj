@@ -1,0 +1,61 @@
+# Exemplo: Pessoa simplificada (stick figure)
+# Representação básica de forma humana
+
+# Cabeça (esfera simplificada)
+v 0.0 1.7 0.0
+v 0.1 1.7 0.0
+v 0.0 1.7 0.1
+v -0.1 1.7 0.0
+v 0.0 1.7 -0.1
+v 0.0 1.8 0.0
+v 0.0 1.6 0.0
+
+# Torso
+v 0.0 1.5 0.0
+v 0.0 1.0 0.0
+v 0.0 0.5 0.0
+
+# Braços
+v -0.4 1.4 0.0
+v -0.6 1.0 0.0
+v 0.4 1.4 0.0
+v 0.6 1.0 0.0
+
+# Pernas
+v -0.2 0.5 0.0
+v -0.2 0.0 0.0
+v 0.2 0.5 0.0
+v 0.2 0.0 0.0
+
+# Cabeça (linhas)
+l 1 2
+l 1 3
+l 1 4
+l 1 5
+l 1 6
+l 1 7
+
+# Pescoço e torso
+l 7 8
+l 8 9
+l 9 10
+
+# Ombros
+l 8 11
+l 8 13
+
+# Braço esquerdo
+l 11 12
+
+# Braço direito
+l 13 14
+
+# Quadris
+l 10 15
+l 10 17
+
+# Perna esquerda
+l 15 16
+
+# Perna direita
+l 17 18

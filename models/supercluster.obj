@@ -1,0 +1,91 @@
+# Exemplo: Superaglomerado de galáxias
+# Rede cósmica com nós representando galáxias
+
+# Filamento principal 1
+v -2.0 0.0 0.0
+v -1.5 0.2 0.3
+v -1.0 0.1 0.5
+v -0.5 -0.1 0.4
+v 0.0 0.0 0.0
+v 0.5 0.1 -0.3
+v 1.0 -0.1 -0.5
+v 1.5 0.2 -0.4
+v 2.0 0.0 0.0
+
+# Filamento 2
+v 0.0 -2.0 0.0
+v 0.3 -1.5 0.2
+v 0.2 -1.0 0.4
+v -0.1 -0.5 0.3
+v 0.1 0.5 -0.2
+v 0.0 1.0 -0.3
+v -0.2 1.5 -0.1
+v 0.0 2.0 0.0
+
+# Filamento 3
+v 0.0 0.0 -2.0
+v -0.3 0.2 -1.5
+v -0.2 0.1 -1.0
+v 0.1 -0.1 -0.5
+v -0.1 0.1 0.5
+v 0.2 0.0 1.0
+v 0.3 -0.2 1.5
+v 0.0 0.0 2.0
+
+# Nós de galáxias (pequenas esferas)
+v 0.0 0.0 0.0
+v 0.1 0.0 0.0
+v 0.0 0.1 0.0
+v -0.1 0.0 0.0
+v 0.0 -0.1 0.0
+
+# Filamento 1
+l 1 2
+l 2 3
+l 3 4
+l 4 5
+l 5 6
+l 6 7
+l 7 8
+l 8 9
+
+# Filamento 2
+l 10 11
+l 11 12
+l 12 13
+l 13 5
+l 5 14
+l 14 15
+l 15 16
+l 16 17
+
+# Filamento 3
+l 18 19
+l 19 20
+l 20 21
+l 21 5
+l 5 22
+l 22 23
+l 23 24
+l 24 25
+
+# Conexões entre filamentos
+l 3 12
+l 6 14
+l 4 20
+l 7 23
+l 2 11
+l 8 15
+
+# Nó central
+l 26 27
+l 27 28
+l 28 29
+l 29 30
+l 30 26
+l 26 28
+l 27 29
+
+# Conexões aos filamentos
+l 5 26
+l 5 28
