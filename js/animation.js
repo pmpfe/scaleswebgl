@@ -54,7 +54,7 @@ class AnimationController {
     }
     
     /**
-     * Vai para a próxima escala
+     * Vai para a próxima escala (com transição direta de 1 passo)
      */
     nextScale() {
         if (this.targetIndex < this.objects.length - 1) {
@@ -63,11 +63,48 @@ class AnimationController {
     }
     
     /**
-     * Vai para a escala anterior
+     * Vai para a escala anterior (com transição direta de 1 passo)
      */
     prevScale() {
         if (this.targetIndex > 0) {
             this.startTransition(this.targetIndex - 1);
+        }
+    }
+    
+    /**
+     * Vai para uma escala específica, passando por todas as escalas intermédias
+     * @param {number} targetIndex - Índice da escala de destino
+     */
+    jumpToScale(targetIndex) {
+        if (targetIndex < 0 || targetIndex >= this.objects.length) return;
+        if (targetIndex === this.targetIndex) return;
+        
+        this.isSliderControlled = false;
+        this.isPlaying = false;
+        
+        // Se está antes do alvo, move um passo de cada vez
+        if (targetIndex > this.targetIndex) {
+            this.nextScale();
+            // Agenda o próximo passo quando terminar
+            this._scheduleJump(targetIndex);
+        } else {
+            this.prevScale();
+            this._scheduleJump(targetIndex);
+        }
+    }
+    
+    /**
+     * Agenda o próximo passo do salto
+     * @private
+     */
+    _scheduleJump(targetIndex) {
+        if (!this._jumpTimeout) {
+            this._jumpTimeout = setTimeout(() => {
+                this._jumpTimeout = null;
+                if (this.targetIndex !== targetIndex && !this.isPlaying) {
+                    this.jumpToScale(targetIndex);
+                }
+            }, this.transitionDuration * 1000 + 100);
         }
     }
     
@@ -92,9 +129,22 @@ class AnimationController {
      * Define a posição contínua via slider (0.0 a objects.length-1)
      */
     setContinuousPosition(position) {
-        this.isPlaying = false; // Para a animação automática
-        this.isSliderControlled = true;
-        this.targetContinuousPosition = Math.max(0, Math.min(position, this.objects.length - 1));
+        const newPosition = Math.max(0, Math.min(position, this.objects.length - 1));
+        const targetIndex = Math.round(newPosition);
+        
+        // Se o salto é muito grande (mais de 1 escala), passa por todas as intermédias
+        const currentTarget = this.targetIndex;
+        const distance = Math.abs(targetIndex - currentTarget);
+        
+        if (distance > 1 && !this.isTransitioning) {
+            // Usa transição encadeada através de escalas intermédias
+            this.jumpToScale(targetIndex);
+        } else {
+            // Transição suave/interpolação contínua
+            this.isPlaying = false;
+            this.isSliderControlled = true;
+            this.targetContinuousPosition = newPosition;
+        }
     }
     
     /**
