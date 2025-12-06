@@ -6,7 +6,7 @@
       "name": "Átomo de Hidrogénio",
       "scale": 1e-10,
       "size": "0.1 nanómetros",
-      "model": "models/atom.obj",
+      "model": "models/hydrogen_no_bg.glb",
       "color": [0.9, 0.1, 0.9],
       "description": "Átomo mais simples"
     },
@@ -14,7 +14,7 @@
       "name": "Molécula de Água",
       "scale": 1e-9,
       "size": "1 nanómetro",
-      "model": "models/water.obj",
+      "model": "models/h2o_molecule.gltf",
       "color": [0.2, 0.6, 0.9],
       "description": "H₂O - três átomos"
     },

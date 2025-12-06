@@ -45,13 +45,19 @@ class Renderer {
         // Vertex shader
         const vsSource = `
             attribute vec3 aPosition;
+            attribute vec3 aColor;
             
             uniform mat4 uModelMatrix;
             uniform mat4 uViewMatrix;
             uniform mat4 uProjectionMatrix;
+            uniform bool uUseVertexColors;
+            uniform vec3 uColor;
+            
+            varying vec3 vColor;
             
             void main() {
                 gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);
+                vColor = uUseVertexColors ? aColor : uColor;
             }
         `;
         
@@ -59,11 +65,11 @@ class Renderer {
         const fsSource = `
             precision mediump float;
             
-            uniform vec3 uColor;
             uniform float uAlpha;
+            varying vec3 vColor;
             
             void main() {
-                gl_FragColor = vec4(uColor, uAlpha);
+                gl_FragColor = vec4(vColor, uAlpha);
             }
         `;
         
@@ -83,14 +89,16 @@ class Renderer {
         this.shader = {
             program: program,
             attribs: {
-                position: gl.getAttribLocation(program, 'aPosition')
+                position: gl.getAttribLocation(program, 'aPosition'),
+                color: gl.getAttribLocation(program, 'aColor')
             },
             uniforms: {
                 modelMatrix: gl.getUniformLocation(program, 'uModelMatrix'),
                 viewMatrix: gl.getUniformLocation(program, 'uViewMatrix'),
                 projectionMatrix: gl.getUniformLocation(program, 'uProjectionMatrix'),
                 color: gl.getUniformLocation(program, 'uColor'),
-                alpha: gl.getUniformLocation(program, 'uAlpha')
+                alpha: gl.getUniformLocation(program, 'uAlpha'),
+                useVertexColors: gl.getUniformLocation(program, 'uUseVertexColors')
             }
         };
     }
@@ -145,6 +153,8 @@ class Renderer {
         gl.uniformMatrix4fv(this.shader.uniforms.projectionMatrix, false, projectionMatrix);
         
         // Define cor e alpha
+        const useModelColors = window.useModelColors !== undefined ? window.useModelColors : false;
+        gl.uniform1i(this.shader.uniforms.useVertexColors, useModelColors && object.colors ? 1 : 0);
         gl.uniform3fv(this.shader.uniforms.color, object.color);
         gl.uniform1f(this.shader.uniforms.alpha, alpha);
         

@@ -5,10 +5,11 @@ class PowersOfTenApp {
     constructor() {
         this.canvas = null;
         this.renderer = null;
-        this.objLoader = null;
+        this.modelLoader = null;
         this.objects = [];
         this.animation = null;
         this.config = null;
+        this.logger = null;
         
         this.lastTime = 0;
         this.isRunning = false;
@@ -50,15 +51,22 @@ class PowersOfTenApp {
         this.ui.scaleSliderValue = document.getElementById('scaleSliderValue');
         this.ui.autoRotate = document.getElementById('autoRotate');
         this.ui.wireframe = document.getElementById('wireframe');
+        this.ui.useModelColors = document.getElementById('useModelColors');
         this.ui.currentScale = document.getElementById('currentScale');
         this.ui.currentObject = document.getElementById('currentObject');
         this.ui.currentSize = document.getElementById('currentSize');
         this.ui.loading = document.getElementById('loading');
         this.ui.objectListItems = document.getElementById('objectListItems');
+        this.ui.logWindow = document.getElementById('logWindow');
+        this.ui.logHeader = document.getElementById('logHeader');
+        this.ui.logBody = document.getElementById('logBody');
         
         // Inicializa o renderizador
         this.renderer = new Renderer(this.canvas);
-        this.objLoader = new OBJLoader();
+        this.modelLoader = new ModelLoader();
+
+        // Inicializa logger
+        this.initLogger();
         
         // Carrega a configuração
         await this.loadConfig();
@@ -103,6 +111,7 @@ class PowersOfTenApp {
             const response = await fetch('config.json');
             this.config = await response.json();
             console.log('Configuração carregada:', this.config);
+            this.logInfo('Configuração carregada com sucesso');
         } catch (error) {
             console.error('Erro ao carregar configuração:', error);
             // Usa configuração padrão
@@ -111,6 +120,7 @@ class PowersOfTenApp {
                 transitionDuration: 3.0,
                 scales: []
             };
+            this.logError('Erro ao carregar config.json; usando configuração padrão. Detalhe: ' + error.message);
         }
     }
     
@@ -119,17 +129,29 @@ class PowersOfTenApp {
      */
     async loadObjects() {
         console.log('Carregando objetos...');
+        this.logInfo('Carregando objetos...');
         
         for (let i = 0; i < this.config.scales.length; i++) {
             const scaleConfig = this.config.scales[i];
             const obj = new ScaleObject(scaleConfig, i);
-            await obj.load(this.renderer.gl, this.objLoader);
-            this.objects.push(obj);
-            
-            console.log(`Objeto ${i + 1}/${this.config.scales.length} carregado: ${obj.name}`);
+            try {
+                const result = await obj.load(this.renderer.gl, this.modelLoader);
+                this.objects.push(obj);
+                const fmt = scaleConfig.model.split('.').pop();
+                if (result.success) {
+                    this.logInfo(`Carregado ${obj.name} (${fmt}, ${result.verticesCount} vértices)`);
+                } else {
+                    this.logWarn(`Fallback procedural para ${obj.name} (modelo: ${fmt}, erro no load)`);
+                }
+                console.log(`Objeto ${i + 1}/${this.config.scales.length} carregado: ${obj.name}`);
+            } catch (err) {
+                this.objects.push(obj); // já gerou geometria procedural
+                this.logError(`Erro ao carregar ${scaleConfig.name}: ${err.message}`);
+            }
         }
         
         console.log('Todos os objetos carregados!');
+        this.logInfo('Todos os objetos carregados');
         
         // Configura o slider de escala
         this.ui.scaleSlider.max = this.objects.length - 1;
@@ -194,6 +216,14 @@ class PowersOfTenApp {
         this.ui.wireframe.addEventListener('change', (e) => {
             this.renderer.setWireframeMode(e.target.checked);
         });
+        
+        // Usar cores do modelo
+        this.ui.useModelColors.addEventListener('change', (e) => {
+            window.useModelColors = e.target.checked;
+        });
+        
+        // Inicializar flag global
+        window.useModelColors = false;
         
         // Teclas de atalho
         window.addEventListener('keydown', (e) => {
@@ -392,6 +422,59 @@ class PowersOfTenApp {
     stop() {
         this.isRunning = false;
     }
+
+    /**
+     * Inicializa logger e eventos de drag da janela
+     */
+    initLogger() {
+        if (!this.ui.logWindow || !this.ui.logHeader || !this.ui.logBody) return;
+        this.logger = {
+            drag: { active: false, offsetX: 0, offsetY: 0 },
+            body: this.ui.logBody,
+            maxEntries: 200
+        };
+        const header = this.ui.logHeader;
+        const win = this.ui.logWindow;
+        const drag = this.logger.drag;
+        header.addEventListener('mousedown', (e) => {
+            drag.active = true;
+            const rect = win.getBoundingClientRect();
+            drag.offsetX = e.clientX - rect.left;
+            drag.offsetY = e.clientY - rect.top;
+            win.style.right = 'auto';
+            document.body.style.userSelect = 'none';
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!drag.active) return;
+            const left = e.clientX - drag.offsetX;
+            const top = e.clientY - drag.offsetY;
+            win.style.left = `${left}px`;
+            win.style.top = `${top}px`;
+        });
+        window.addEventListener('mouseup', () => {
+            drag.active = false;
+            document.body.style.userSelect = '';
+        });
+    }
+
+    log(level, message) {
+        if (!this.logger) return;
+        const body = this.logger.body;
+        const time = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${level}`;
+        entry.innerHTML = `<span class="log-time">[${time}]</span>${message}`;
+        body.appendChild(entry);
+        // limita entradas
+        while (body.children.length > this.logger.maxEntries) {
+            body.removeChild(body.firstChild);
+        }
+        body.scrollTop = body.scrollHeight;
+    }
+
+    logInfo(msg) { this.log('info', msg); }
+    logWarn(msg) { this.log('warn', msg); }
+    logError(msg) { this.log('error', msg); }
 }
 
 // Inicializa a aplicação quando a página carregar

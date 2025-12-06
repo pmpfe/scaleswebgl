@@ -214,6 +214,61 @@
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
+
+        /* Janela de log arrastável */
+        #logWindow {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 360px;
+            max-height: 50vh;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 16px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            cursor: default;
+            user-select: none;
+            z-index: 2000;
+        }
+
+        #logHeader {
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: grab;
+        }
+
+        #logHeader:active {
+            cursor: grabbing;
+        }
+
+        #logBody {
+            padding: 8px 12px;
+            overflow-y: auto;
+            max-height: calc(50vh - 44px);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .log-entry {
+            margin-bottom: 6px;
+            padding-left: 4px;
+            border-left: 2px solid transparent;
+            word-break: break-word;
+        }
+
+        .log-entry.info { border-color: #4CAF50; color: #d5f4e5; }
+        .log-entry.warn { border-color: #FFC107; color: #ffe9b3; }
+        .log-entry.error { border-color: #F44336; color: #ffbdb3; }
+        .log-time { color: #888; margin-right: 6px; }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -267,6 +322,13 @@
                 Modo Wireframe
             </label>
         </div>
+        
+        <div class="control-group">
+            <label>
+                <input type="checkbox" id="useModelColors">
+                Usar Cores do Modelo
+            </label>
+        </div>
     </div>
     
     <div id="info">
@@ -281,9 +343,16 @@
         <h2>Escalas</h2>
         <div id="objectListItems"></div>
     </div>
+
+    <div id="logWindow">
+        <div id="logHeader">Logs (arraste para mover)</div>
+        <div id="logBody"></div>
+    </div>
     
     <script src="js/gl-matrix-min.js"></script>
     <script src="js/objloader.js"></script>
+    <script src="js/gltfloader.js"></script>
+    <script src="js/modelloader.js"></script>
     <script src="js/scaleobject.js"></script>
     <script src="js/renderer.js"></script>
     <script src="js/animation.js"></script>

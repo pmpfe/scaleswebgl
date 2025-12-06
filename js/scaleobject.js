@@ -13,23 +13,28 @@ class ScaleObject {
         
         this.vertices = null;
         this.indices = null;
+        this.colors = null;
         this.loaded = false;
         
         // Buffers WebGL
         this.vertexBuffer = null;
         this.indexBuffer = null;
+        this.colorBuffer = null;
     }
     
     /**
      * Carrega o modelo OBJ ou gera geometria procedural
      */
-    async load(gl, objLoader) {
+    async load(gl, modelLoader) {
+        let usedFallback = false;
         try {
-            // Tenta carregar o modelo OBJ
-            const modelData = await objLoader.load(this.modelPath);
+            // Detecta e carrega modelo (OBJ, GLTF ou GLB)
+            const modelData = await modelLoader.load(this.modelPath);
             this.vertices = modelData.vertices;
             this.indices = modelData.indices;
+            this.colors = modelData.colors || null;
         } catch (error) {
+            usedFallback = true;
             console.warn(`Não foi possível carregar ${this.modelPath}, usando geometria procedural:`, error);
             this.generateProceduralGeometry();
         }
@@ -37,6 +42,12 @@ class ScaleObject {
         // Cria buffers WebGL
         this.createBuffers(gl);
         this.loaded = true;
+
+        return {
+            success: !usedFallback,
+            usedFallback,
+            verticesCount: this.vertices ? this.vertices.length / 3 : 0
+        };
     }
     
     /**
@@ -299,6 +310,13 @@ class ScaleObject {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
         
+        // Buffer de cores (se existirem)
+        if (this.colors) {
+            this.colorBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+        }
+        
         // Buffer de índices
         this.indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
@@ -314,6 +332,15 @@ class ScaleObject {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.vertexAttribPointer(shader.attribs.position, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(shader.attribs.position);
+        
+        // Bind cores se existirem
+        if (this.colorBuffer && shader.attribs.color !== -1) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+            gl.vertexAttribPointer(shader.attribs.color, 3, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(shader.attribs.color);
+        } else if (shader.attribs.color !== -1) {
+            gl.disableVertexAttribArray(shader.attribs.color);
+        }
         
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.LINES, this.indices.length, gl.UNSIGNED_SHORT, 0);

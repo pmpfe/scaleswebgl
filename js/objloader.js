@@ -92,7 +92,8 @@ class OBJLoader {
         
         return {
             vertices: vertexArray,
-            indices: new Uint16Array(indices)
+            indices: new Uint16Array(indices),
+            colors: null
         };
     }
     
