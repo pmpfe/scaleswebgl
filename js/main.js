@@ -20,12 +20,15 @@ class PowersOfTenApp {
             prevScale: null,
             speed: null,
             speedValue: null,
+            scaleSlider: null,
+            scaleSliderValue: null,
             autoRotate: null,
             wireframe: null,
             currentScale: null,
             currentObject: null,
             currentSize: null,
-            loading: null
+            loading: null,
+            objectListItems: null
         };
     }
     
@@ -33,7 +36,7 @@ class PowersOfTenApp {
      * Inicializa a aplicação
      */
     async init() {
-        console.log('Inicializando Powers of Ten...');
+        console.log('Inicializando Cosmic Scales...');
         
         // Referências aos elementos da UI
         this.canvas = document.getElementById('canvas');
@@ -43,12 +46,15 @@ class PowersOfTenApp {
         this.ui.prevScale = document.getElementById('prevScale');
         this.ui.speed = document.getElementById('speed');
         this.ui.speedValue = document.getElementById('speedValue');
+        this.ui.scaleSlider = document.getElementById('scaleSlider');
+        this.ui.scaleSliderValue = document.getElementById('scaleSliderValue');
         this.ui.autoRotate = document.getElementById('autoRotate');
         this.ui.wireframe = document.getElementById('wireframe');
         this.ui.currentScale = document.getElementById('currentScale');
         this.ui.currentObject = document.getElementById('currentObject');
         this.ui.currentSize = document.getElementById('currentSize');
         this.ui.loading = document.getElementById('loading');
+        this.ui.objectListItems = document.getElementById('objectListItems');
         
         // Inicializa o renderizador
         this.renderer = new Renderer(this.canvas);
@@ -75,6 +81,11 @@ class PowersOfTenApp {
         
         // Atualiza a UI
         this.updateUI();
+        
+        // Atualiza slider de escala
+        const continuousPos = this.animation.getContinuousPosition();
+        this.ui.scaleSlider.value = continuousPos;
+        this.ui.scaleSliderValue.textContent = Math.round(continuousPos);
         
         // Inicia o loop de renderização
         this.isRunning = true;
@@ -119,6 +130,12 @@ class PowersOfTenApp {
         }
         
         console.log('Todos os objetos carregados!');
+        
+        // Configura o slider de escala
+        this.ui.scaleSlider.max = this.objects.length - 1;
+        
+        // Popula a lista de objetos
+        this.populateObjectList();
     }
     
     /**
@@ -152,11 +169,20 @@ class PowersOfTenApp {
             this.animation.prevScale();
         });
         
-        // Controle de velocidade
+        // Controlo de velocidade
         this.ui.speed.addEventListener('input', (e) => {
             const speed = parseFloat(e.target.value);
             this.animation.setSpeed(speed);
             this.ui.speedValue.textContent = speed.toFixed(1);
+        });
+        
+        // Slider de escala contínua
+        this.ui.scaleSlider.addEventListener('input', (e) => {
+            const position = parseFloat(e.target.value);
+            this.animation.setContinuousPosition(position);
+            const index = Math.round(position);
+            this.ui.scaleSliderValue.textContent = index;
+            this.updateObjectListHighlight();
         });
         
         // Rotação automática
@@ -193,6 +219,72 @@ class PowersOfTenApp {
     }
     
     /**
+     * Popula a lista de objetos no painel lateral
+     */
+    populateObjectList() {
+        this.ui.objectListItems.innerHTML = '';
+        
+        this.config.scales.forEach((scaleConfig, index) => {
+            const item = document.createElement('div');
+            item.className = 'object-list-item';
+            item.dataset.index = index;
+            
+            const name = document.createElement('span');
+            name.className = 'object-list-item-name';
+            name.textContent = scaleConfig.name;
+            
+            const scale = document.createElement('span');
+            scale.className = 'object-list-item-scale';
+            scale.textContent = scaleConfig.size;
+            
+            item.appendChild(name);
+            item.appendChild(scale);
+            
+            // Click handler - salta para esta escala
+            item.addEventListener('click', () => {
+                this.ui.scaleSlider.value = index;
+                this.animation.setContinuousPosition(index);
+                this.updateObjectListHighlight();
+            });
+            
+            this.ui.objectListItems.appendChild(item);
+        });
+    }
+    
+    /**
+     * Atualiza o destaque dos objetos visíveis na lista
+     */
+    updateObjectListHighlight() {
+        const items = document.querySelectorAll('.object-list-item');
+        const renderInfo = this.animation.getRenderInfo();
+        
+        // Remove todos os destaques
+        items.forEach(item => {
+            item.classList.remove('visible', 'primary');
+        });
+        
+        // Adiciona destaque aos objetos visíveis
+        renderInfo.objects.forEach((info, idx) => {
+            if (info.alpha > 0.01) { // Apenas objetos visíveis
+                const objectIndex = this.objects.indexOf(info.object);
+                if (objectIndex !== -1 && items[objectIndex]) {
+                    items[objectIndex].classList.add('visible');
+                    // O objeto com maior alpha é o "primary"
+                    if (info.alpha > 0.5) {
+                        items[objectIndex].classList.add('primary');
+                    }
+                }
+            }
+        });
+        
+        // Scroll automático para o item principal visível
+        const primaryItem = document.querySelector('.object-list-item.primary');
+        if (primaryItem) {
+            primaryItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+    
+    /**
      * Atualiza a interface
      */
     updateUI() {
@@ -226,6 +318,16 @@ class PowersOfTenApp {
         // Atualiza UI
         this.updateUI();
         
+        // Atualiza slider se estiver em animação automática
+        if (this.animation.isPlaying || this.animation.isSliderControlled) {
+            const continuousPos = this.animation.getContinuousPosition();
+            this.ui.scaleSlider.value = continuousPos;
+            this.ui.scaleSliderValue.textContent = Math.round(continuousPos);
+        }
+        
+        // Atualiza destaque da lista
+        this.updateObjectListHighlight();
+        
         // Renderiza a cena
         this.renderScene();
         
@@ -249,7 +351,7 @@ class PowersOfTenApp {
             45 * Math.PI / 180,
             aspect,
             0.1,
-            1000.0
+            1e20
         );
         
         // Matriz de visualização (câmera)

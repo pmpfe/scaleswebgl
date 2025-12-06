@@ -1,102 +1,270 @@
 {
-  "scaleFactor": 1000,
+  "scaleFactor": 10,
   "transitionDuration": 3.0,
   "scales": [
     {
-      "name": "Molécula de DNA",
-      "scale": 1e-9,
-      "size": "2 nanómetros",
-      "model": "models/dna.obj",
-      "color": [0.2, 0.8, 0.2],
-      "description": "Dupla hélice de DNA"
+      "name": "Átomo de Hidrogénio",
+      "scale": 1e-10,
+      "size": "0.1 nanómetros",
+      "model": "models/atom.obj",
+      "color": [0.9, 0.1, 0.9],
+      "description": "Átomo mais simples"
     },
     {
-      "name": "Vírus",
-      "scale": 1e-6,
+      "name": "Molécula de Água",
+      "scale": 1e-9,
+      "size": "1 nanómetro",
+      "model": "models/water.obj",
+      "color": [0.2, 0.6, 0.9],
+      "description": "H₂O - três átomos"
+    },
+    {
+      "name": "Molécula de DNA",
+      "scale": 1e-8,
+      "size": "10 nanómetros",
+      "model": "models/dna.obj",
+      "color": [0.2, 0.8, 0.2],
+      "description": "Dupla hélice - cadeia de moléculas"
+    },
+    {
+      "name": "Vírus Pequeno",
+      "scale": 1e-7,
       "size": "100 nanómetros",
       "model": "models/virus.obj",
       "color": [0.8, 0.2, 0.2],
-      "description": "Bacteriófago"
+      "description": "Cápsula de proteínas e DNA"
     },
     {
-      "name": "Célula",
+      "name": "Bactéria",
+      "scale": 1e-6,
+      "size": "1 micrómetro",
+      "model": "models/bacteria.obj",
+      "color": [0.3, 0.7, 0.3],
+      "description": "Organismo unicelular"
+    },
+    {
+      "name": "Célula Humana",
       "scale": 1e-5,
       "size": "10 micrómetros",
       "model": "models/cell.obj",
       "color": [0.2, 0.6, 0.8],
-      "description": "Célula eucariota"
+      "description": "Contém milhões de moléculas"
     },
     {
-      "name": "Grão de Areia",
+      "name": "Grão de Pólen",
+      "scale": 1e-4,
+      "size": "100 micrómetros",
+      "model": "models/pollen.obj",
+      "color": [0.9, 0.9, 0.3],
+      "description": "Célula reprodutiva vegetal"
+    },
+    {
+      "name": "Formiga",
       "scale": 1e-3,
       "size": "1 milímetro",
-      "model": "models/sand.obj",
-      "color": [0.9, 0.8, 0.5],
-      "description": "Grão de areia de quartzo"
+      "model": "models/ant.obj",
+      "color": [0.3, 0.2, 0.1],
+      "description": "Milhões de células"
     },
     {
-      "name": "Mão Humana",
-      "scale": 0.2,
-      "size": "20 centímetros",
-      "model": "models/hand.obj",
-      "color": [0.9, 0.7, 0.6],
-      "description": "Mão adulta"
+      "name": "Abelha",
+      "scale": 1e-2,
+      "size": "1 centímetro",
+      "model": "models/bee.obj",
+      "color": [0.9, 0.7, 0.1],
+      "description": "Inseto polinizador"
+    },
+    {
+      "name": "Bola de Ténis",
+      "scale": 1e-1,
+      "size": "10 centímetros",
+      "model": "models/ball.obj",
+      "color": [0.9, 0.9, 0.2],
+      "description": "Objeto quotidiano"
     },
     {
       "name": "Pessoa",
-      "scale": 1.8,
-      "size": "1.8 metros",
+      "scale": 1e0,
+      "size": "1 metro",
       "model": "models/person.obj",
-      "color": [0.7, 0.7, 0.9],
+      "color": [0.9, 0.7, 0.6],
       "description": "Ser humano adulto"
     },
     {
-      "name": "Edifício",
-      "scale": 100,
-      "size": "100 metros",
-      "model": "models/building.obj",
-      "color": [0.5, 0.5, 0.5],
-      "description": "Arranha-céus"
+      "name": "Árvore",
+      "scale": 1e1,
+      "size": "10 metros",
+      "model": "models/tree.obj",
+      "color": [0.3, 0.6, 0.2],
+      "description": "Organismo multicelular grande"
     },
     {
-      "name": "Cidade",
-      "scale": 10000,
+      "name": "Baleia Azul",
+      "scale": 1e2,
+      "size": "100 metros",
+      "model": "models/whale.obj",
+      "color": [0.2, 0.4, 0.7],
+      "description": "Maior animal do planeta"
+    },
+    {
+      "name": "Montanha",
+      "scale": 1e3,
+      "size": "1 quilómetro",
+      "model": "models/mountain.obj",
+      "color": [0.6, 0.5, 0.4],
+      "description": "Formação geológica"
+    },
+    {
+      "name": "Cidade Pequena",
+      "scale": 1e4,
       "size": "10 quilómetros",
+      "model": "models/town.obj",
+      "color": [0.6, 0.6, 0.5],
+      "description": "Assentamento humano"
+    },
+    {
+      "name": "Grande Cidade",
+      "scale": 1e5,
+      "size": "100 quilómetros",
       "model": "models/city.obj",
-      "color": [0.6, 0.6, 0.3],
-      "description": "Área urbana"
+      "color": [0.7, 0.7, 0.3],
+      "description": "Área metropolitana"
+    },
+    {
+      "name": "Portugal",
+      "scale": 1e6,
+      "size": "1000 quilómetros",
+      "model": "models/country.obj",
+      "color": [0.3, 0.7, 0.3],
+      "description": "País de tamanho médio"
     },
     {
       "name": "Terra",
-      "scale": 12742000,
-      "size": "12,742 km",
+      "scale": 1e7,
+      "size": "10,000 km (diâmetro)",
       "model": "models/earth.obj",
       "color": [0.2, 0.4, 0.8],
-      "description": "Planeta Terra"
+      "description": "Planeta rochoso"
+    },
+    {
+      "name": "Júpiter",
+      "scale": 1e8,
+      "size": "100,000 km",
+      "model": "models/jupiter.obj",
+      "color": [0.8, 0.6, 0.4],
+      "description": "Gigante gasoso"
+    },
+    {
+      "name": "Sol",
+      "scale": 1e9,
+      "size": "1 milhão km",
+      "model": "models/sun.obj",
+      "color": [0.9, 0.9, 0.2],
+      "description": "Estrela - 99.8% do sistema solar"
+    },
+    {
+      "name": "Sistema Solar Interior",
+      "scale": 1e10,
+      "size": "10 milhões km",
+      "model": "models/inner_solar.obj",
+      "color": [0.8, 0.7, 0.5],
+      "description": "Órbita de Marte"
     },
     {
       "name": "Sistema Solar",
+      "scale": 1e11,
+      "size": "100 milhões km",
+      "model": "models/solar_system.obj",
+      "color": [0.7, 0.6, 0.5],
+      "description": "Órbita de Terra a Júpiter"
+    },
+    {
+      "name": "Órbita de Neptuno",
+      "scale": 1e12,
+      "size": "1 mil milhões km",
+      "model": "models/neptune_orbit.obj",
+      "color": [0.3, 0.4, 0.8],
+      "description": "Limite do sistema planetário"
+    },
+    {
+      "name": "Cintura de Kuiper",
       "scale": 1e13,
-      "size": "10 mil milhões de km",
-      "model": "models/solarsystem.obj",
-      "color": [0.9, 0.6, 0.2],
-      "description": "Sol e planetas"
+      "size": "10 mil milhões km",
+      "model": "models/kuiper.obj",
+      "color": [0.5, 0.5, 0.6],
+      "description": "Objetos gelados trans-netunianos"
+    },
+    {
+      "name": "Nuvem de Oort Interior",
+      "scale": 1e14,
+      "size": "1 ano-luz",
+      "model": "models/oort.obj",
+      "color": [0.4, 0.4, 0.5],
+      "description": "Cometas distantes"
+    },
+    {
+      "name": "Nuvem de Oort Exterior",
+      "scale": 1e15,
+      "size": "10 anos-luz",
+      "model": "models/oort_outer.obj",
+      "color": [0.3, 0.3, 0.4],
+      "description": "Limite da influência solar"
+    },
+    {
+      "name": "Estrelas Próximas",
+      "scale": 1e16,
+      "size": "100 anos-luz",
+      "model": "models/nearby_stars.obj",
+      "color": [0.8, 0.8, 0.9],
+      "description": "Vizinhança solar"
+    },
+    {
+      "name": "Aglomerado Estelar",
+      "scale": 1e17,
+      "size": "1000 anos-luz",
+      "model": "models/star_cluster.obj",
+      "color": [0.7, 0.7, 0.9],
+      "description": "Milhares de estrelas"
+    },
+    {
+      "name": "Nebulosa",
+      "scale": 1e18,
+      "size": "10,000 anos-luz",
+      "model": "models/nebula.obj",
+      "color": [0.9, 0.3, 0.6],
+      "description": "Nuvem de gás e poeira estelar"
+    },
+    {
+      "name": "Braço Galáctico",
+      "scale": 1e19,
+      "size": "100,000 anos-luz",
+      "model": "models/galactic_arm.obj",
+      "color": [0.6, 0.6, 0.8],
+      "description": "Estrutura espiral da galáxia"
     },
     {
       "name": "Via Láctea",
-      "scale": 1e21,
-      "size": "100,000 anos-luz",
+      "scale": 1e20,
+      "size": "1 milhão anos-luz",
       "model": "models/galaxy.obj",
       "color": [0.8, 0.8, 0.9],
-      "description": "Nossa galáxia"
+      "description": "Nossa galáxia - 100 mil milhões de estrelas"
     },
     {
-      "name": "Superaglomerado",
-      "scale": 1e24,
-      "size": "500 milhões de anos-luz",
+      "name": "Grupo Local",
+      "scale": 1e21,
+      "size": "10 milhões anos-luz",
+      "model": "models/local_group.obj",
+      "color": [0.7, 0.5, 0.8],
+      "description": "Aglomerado de galáxias próximas"
+    },
+    {
+      "name": "Superaglomerado de Virgem",
+      "scale": 1e22,
+      "size": "100 milhões anos-luz",
       "model": "models/supercluster.obj",
       "color": [0.6, 0.3, 0.8],
-      "description": "Aglomerado de galáxias"
+      "description": "Milhares de galáxias"
     }
   ]
 }

@@ -6,11 +6,15 @@ class AnimationController {
         this.objects = objects;
         this.scaleFactor = scaleFactor;
         this.transitionDuration = transitionDuration;
+        this.baseScale = objects[0].scale;
         
         this.currentIndex = 0;
         this.targetIndex = 0;
         this.isTransitioning = false;
         this.transitionProgress = 0;
+        this.continuousPosition = 0.0; // Posição contínua entre objetos (0.0 a objects.length-1)
+        this.targetContinuousPosition = 0.0;
+        this.isSliderControlled = false;
         
         this.isPlaying = false;
         this.autoRotateEnabled = true;
@@ -77,10 +81,20 @@ class AnimationController {
         this.targetIndex = newIndex;
         this.isTransitioning = true;
         this.transitionProgress = 0;
+        this.isSliderControlled = false;
         
         // Calcula nova distância da câmera
         const targetObject = this.objects[newIndex];
         this.camera.targetDistance = this.calculateCameraDistance(targetObject);
+    }
+    
+    /**
+     * Define a posição contínua via slider (0.0 a objects.length-1)
+     */
+    setContinuousPosition(position) {
+        this.isPlaying = false; // Para a animação automática
+        this.isSliderControlled = true;
+        this.targetContinuousPosition = Math.max(0, Math.min(position, this.objects.length - 1));
     }
     
     /**
@@ -100,10 +114,10 @@ class AnimationController {
                 const dist = Math.sqrt(x * x + y * y + z * z);
                 maxDist = Math.max(maxDist, dist);
             }
-            distance = maxDist * 2.5;
+            distance = maxDist * 2.5 * (object.scale / this.baseScale);
         }
         
-        return Math.max(3.0, Math.min(distance, 20.0));
+        return Math.max(3.0, Math.min(distance, 1e10)); // Limitar para evitar valores extremos
     }
     
     /**
@@ -115,14 +129,33 @@ class AnimationController {
             this.rotationAngle += deltaTime * 0.5 * this.speed;
         }
         
-        // Atualiza transição
-        if (this.isTransitioning) {
+        // Atualiza posição contínua (slider ou transições discretas)
+        if (this.isSliderControlled) {
+            // Transição rápida de 0.3s para a posição do slider
+            const diff = this.targetContinuousPosition - this.continuousPosition;
+            const transitionSpeed = 1.0 / 0.3; // Completa em 0.3s
+            const maxChange = deltaTime * transitionSpeed * Math.abs(diff);
+            
+            if (Math.abs(diff) < 0.001) {
+                this.continuousPosition = this.targetContinuousPosition;
+            } else {
+                this.continuousPosition += Math.sign(diff) * Math.min(Math.abs(diff), maxChange);
+            }
+            
+            // Atualiza índices baseado na posição contínua
+            this.currentIndex = Math.floor(this.continuousPosition);
+            this.targetIndex = Math.min(this.currentIndex + 1, this.objects.length - 1);
+            
+        } else if (this.isTransitioning) {
+            // Transição discreta entre objetos (modo automático)
             this.transitionProgress += (deltaTime / this.transitionDuration) * this.speed;
             
             if (this.transitionProgress >= 1.0) {
                 this.transitionProgress = 1.0;
                 this.isTransitioning = false;
                 this.currentIndex = this.targetIndex;
+                this.continuousPosition = this.currentIndex;
+                this.targetContinuousPosition = this.currentIndex;
                 
                 // Se estiver em modo play, continua para a próxima escala
                 if (this.isPlaying && this.currentIndex < this.objects.length - 1) {
@@ -135,6 +168,10 @@ class AnimationController {
             // Inicia a primeira transição
             this.nextScale();
         }
+        
+        // Calcula distância da câmera baseada na escala atual
+        const currentObject = this.getCurrentObjectForCamera();
+        this.camera.targetDistance = this.calculateCameraDistance(currentObject);
         
         // Suaviza a distância da câmera
         const distDiff = this.camera.targetDistance - this.camera.distance;
@@ -156,6 +193,14 @@ class AnimationController {
     }
     
     /**
+     * Obtém o objeto para cálculo de câmera (baseado na posição contínua)
+     */
+    getCurrentObjectForCamera() {
+        const index = Math.round(this.continuousPosition);
+        return this.objects[Math.max(0, Math.min(index, this.objects.length - 1))];
+    }
+    
+    /**
      * Obtém informações para renderização
      */
     getRenderInfo() {
@@ -165,33 +210,51 @@ class AnimationController {
             rotationAngle: this.rotationAngle
         };
         
-        if (!this.isTransitioning) {
-            // Apenas o objeto atual
+        // Determina o fator de transição
+        let t;
+        if (this.isSliderControlled) {
+            // Interpolação contínua baseada na posição do slider
+            t = this.continuousPosition - this.currentIndex;
+        } else if (this.isTransitioning) {
+            // Transição discreta com easing
+            t = this.easeInOutCubic(this.transitionProgress);
+        } else {
+            // Sem transição
+            t = 0.0;
+        }
+        
+        if (t < 0.001 && !this.isSliderControlled) {
+            // Apenas o objeto atual (sem interpolação)
             info.objects.push({
                 object: this.getCurrentObject(),
                 alpha: 1.0,
-                scale: 1.0
+                scale: this.getCurrentObject().scale / this.baseScale
             });
         } else {
-            // Transição entre dois objetos
-            const t = this.easeInOutCubic(this.transitionProgress);
+            // Transição/interpolação entre dois objetos
             const currentObject = this.objects[this.currentIndex];
             const targetObject = this.objects[this.targetIndex];
             
-            // Objeto atual (fade out e zoom)
-            const zoomingOut = this.targetIndex > this.currentIndex;
-            const currentScale = zoomingOut ? 1.0 - t * 0.5 : 1.0 + t * 0.5;
+            const currentRelativeScale = currentObject.scale / this.baseScale;
+            const targetRelativeScale = targetObject.scale / this.baseScale;
+            
+            // Ambos os objetos interpolam de suas escalas ATUAIS para suas escalas FINAIS
+            // Objeto atual: de currentRelativeScale para (currentRelativeScale / targetRelativeScale)
+            // Objeto alvo: de targetRelativeScale para targetRelativeScale (já está no tamanho final renderizado)
+            
+            // Interpolação linear simples entre os tamanhos
+            const currentScale = currentRelativeScale * (1.0 - t) + (currentRelativeScale / targetRelativeScale) * t;
+            const targetScale = targetRelativeScale * (1.0 - t) + targetRelativeScale * t;
+            
+            // Fade out do objeto atual e fade in do objeto alvo
             const currentAlpha = 1.0 - t;
+            const targetAlpha = t;
             
             info.objects.push({
                 object: currentObject,
                 alpha: currentAlpha,
                 scale: currentScale
             });
-            
-            // Objeto alvo (fade in e zoom)
-            const targetScale = zoomingOut ? 0.5 + t * 0.5 : 1.5 - t * 0.5;
-            const targetAlpha = t;
             
             info.objects.push({
                 object: targetObject,
@@ -231,5 +294,18 @@ class AnimationController {
      */
     getCurrentIndex() {
         return this.isTransitioning ? this.targetIndex : this.currentIndex;
+    }
+    
+    /**
+     * Obtém a posição contínua atual
+     */
+    getContinuousPosition() {
+        if (this.isSliderControlled) {
+            return this.continuousPosition;
+        } else if (this.isTransitioning) {
+            return this.currentIndex + this.transitionProgress;
+        } else {
+            return this.currentIndex;
+        }
     }
 }

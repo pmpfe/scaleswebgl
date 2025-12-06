@@ -1,10 +1,10 @@
-# Arquitetura do Sistema - Powers of Ten
+# Arquitetura do Sistema - Cosmic Scales
 
 ## Diagrama de Componentes
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        POWERS OF TEN                            │
+│                        Cosmic Scales                            │
 │                     Aplicação WebGL                             │
 └─────────────────────────────────────────────────────────────────┘
                               │

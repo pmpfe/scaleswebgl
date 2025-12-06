@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Utilitário para validar e normalizar modelos OBJ para Powers of Ten
+Utilitário para validar e normalizar modelos OBJ para Cosmic Scales
 """
 
 import sys
@@ -89,7 +89,7 @@ def write_obj(filename, vertices, lines, faces):
     """Escreve um arquivo OBJ"""
     try:
         with open(filename, 'w') as f:
-            f.write("# Normalized by Powers of Ten utility\n\n")
+            f.write("# Normalized by Cosmic Scales utility\n\n")
             
             # Vértices
             f.write("# Vertices\n")
@@ -204,7 +204,7 @@ def main():
     if len(sys.argv) < 2:
         print("""
 ╔════════════════════════════════════════════════════════════════╗
-║  Powers of Ten - Utilitário de Validação de Modelos OBJ       ║
+║  Cosmic Scales - Utilitário de Validação de Modelos OBJ       ║
 ╚════════════════════════════════════════════════════════════════╝
 
 Uso:

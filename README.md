@@ -1,6 +1,6 @@
-# Powers of Ten - WebGL
+# Cosmic Scales - WebGL
 
-Uma animação WebGL interativa inspirada no clássico filme "Powers of Ten" de Charles e Ray Eames, que permite explorar diferentes escalas do universo, desde o molecular até o intergaláctico.
+Uma animação WebGL interativa inspirada no clássico filme "Cosmic Scales" de Charles e Ray Eames, que permite explorar diferentes escalas do universo, desde o molecular até o intergaláctico.
 
 ## 🌟 Características
 
@@ -235,7 +235,7 @@ Este projeto é fornecido como está, para fins educacionais e de demonstração
 
 ## 🙏 Inspiração
 
-Baseado no filme "Powers of Ten" (1977) de Charles e Ray Eames, que explorou a magnitude relativa do universo.
+Baseado no filme "Cosmic Scales" (1977) de Charles e Ray Eames, que explorou a magnitude relativa do universo.
 
 ---
 

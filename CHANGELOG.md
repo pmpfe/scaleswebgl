@@ -1,4 +1,4 @@
-# Changelog - Powers of Ten WebGL
+# Changelog - Cosmic Scales WebGL
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
@@ -121,7 +121,7 @@ Nenhum no momento.
 
 #### Notas de Desenvolvimento
 
-- Inspirado no filme "Powers of Ten" (1977) de Charles e Ray Eames
+- Inspirado no filme "Cosmic Scales" (1977) de Charles e Ray Eames
 - Desenvolvido para fins educacionais e de demonstração
 - Foco em performance e facilidade de uso
 - Arquitetura modular para fácil extensão

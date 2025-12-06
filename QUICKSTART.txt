@@ -1,6 +1,6 @@
 ╔════════════════════════════════════════════════════════════════╗
 ║                                                                ║
-║           🌌 POWERS OF TEN - GUIA DE INÍCIO RÁPIDO 🌌          ║
+║           🌌 Cosmic Scales - GUIA DE INÍCIO RÁPIDO 🌌          ║
 ║                                                                ║
 ╚════════════════════════════════════════════════════════════════╝
 
@@ -168,7 +168,7 @@ scaleswebgl/
 ═══════════════════════════════════════════════════════════════════
 
                      Inspirado por Charles e Ray Eames
-                        "Powers of Ten" (1977)
+                        "Cosmic Scales" (1977)
 
                   Desenvolvido para exploração educacional
                         e visualização científica

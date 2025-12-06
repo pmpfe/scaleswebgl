@@ -1,8 +1,8 @@
-# Guia de Criação de Modelos OBJ para Powers of Ten
+# Guia de Criação de Modelos OBJ para Cosmic Scales
 
 ## Introdução
 
-Este guia explica como criar modelos OBJ personalizados para usar na aplicação Powers of Ten. Os modelos são renderizados em modo wireframe, portanto o foco é nas arestas e linhas, não em faces sólidas.
+Este guia explica como criar modelos OBJ personalizados para usar na aplicação Cosmic Scales. Os modelos são renderizados em modo wireframe, portanto o foco é nas arestas e linhas, não em faces sólidas.
 
 ## Formato OBJ Básico
 

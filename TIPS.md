@@ -1,4 +1,4 @@
-# 💡 Dicas e Truques - Powers of Ten
+# 💡 Dicas e Truques - Cosmic Scales
 
 ## 🎨 Personalização Visual
 
