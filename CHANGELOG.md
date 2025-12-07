@@ -2,6 +2,64 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [Unreleased] - 2025-12-07
+
+### Adicionado
+
+**Sistema de Fallback de Modelos:**
+- 🆚 Ponto de interrogação 3D em cor laranja (`models/question_mark.obj`)
+- 🔄 Cadeia de fallback automática: original → _fallback → question_mark → procedural
+- 📝 `ModelLoader.getFallbackPath()`: converte `galaxy.obj` → `galaxy_fallback.obj`
+- 📊 Retorna tipo de fallback usado: `'none'`, `'question_mark'`, `'procedural'`
+- 📋 Logs de diagnóstico em `console.warn()` para cada nível
+
+**Janela de Log Melhorada:**
+- 🎯 Botões +/- para colapsar/expandir janela de log
+- 👁️ Transparência ajustada (background: rgba(0,0,0,0.7))
+- 🖼️ Border definido (2px solid rgba(255,255,255,0.2))
+- ✨ Transições suaves ao colapsar/expandir
+
+**Validação Rigorosa de Modelos:**
+- 🔍 Script `validate_models.py` para validação completa
+- ✅ Validação de estrutura OBJ e GLTF com verificação de buffers
+- 🔬 Validação GLB com verificação de chunks JSON/BIN
+
+### Modificado
+
+**Carregamento de Modelos:**
+- `js/modelloader.js`: +42 linhas (novo método `getFallbackPath()`, fluxo de fallback)
+- `js/scaleobject.js`: +27 linhas (cadeia de 3 fallbacks em `load()`)
+- `config.json`: +1 entrada (escala "Ponto de Interrogação" para teste)
+
+**Interface de Log:**
+- Estado colapsado mantém apenas barra de título visível
+- Melhor visualização do conteúdo por trás da janela
+
+### Corrigido
+
+**Modelos Inválidos:**
+- ❌ Removido `h2o_molecule.gltf` (buffer externo `scene.bin` faltante)
+- ✅ Todos os 13 modelos restantes validados e funcionais
+
+### Técnico
+
+**Validação de GLTF:**
+```python
+# Verifica buffers externos
+if 'uri' in buffer:
+    buffer_path = os.path.join(model_dir, uri)
+    if not os.path.exists(buffer_path):
+        return False  # Buffer faltante
+```
+
+**Validação de GLB:**
+```python
+# Verifica chunks binários
+json_length = struct.unpack('<I', f.read(4))[0]
+bin_length = struct.unpack('<I', f.read(4))[0]
+# Valida integridade dos dados
+```
+
 ## [Unreleased] - 2025-12-06
 
 ### Adicionado

@@ -3,200 +3,234 @@
   "transitionDuration": 3.0,
   "scales": [
     {
+      "name": "TESTE - Modelo Inválido",
+      "scale": 1e-11,
+      "objectSize": 1e-11,
+      "size": "0.01 nm (TESTE FALLBACK)",
+      "model": "models/MODELO_QUE_NAO_EXISTE.obj",
+      "color": [1.0, 0.0, 0.0],
+      "description": "Teste de fallback - deve aparecer ponto de interrogação laranja"
+    },
+    {
       "name": "Átomo de Hidrogénio",
-      "scale": 1e-10,
-      "size": "0.1 nanómetros",
+      "scale": 5.3e-11,
+      "objectSize": 5.3e-11,
+      "size": "0.053 nm (raio de Bohr)",
       "model": "models/hydrogen_no_bg.glb",
       "color": [0.9, 0.1, 0.9],
       "description": "Átomo mais simples"
     },
     {
       "name": "Molécula de Água",
-      "scale": 1e-9,
-      "size": "1 nanómetro",
-      "model": "models/h2o_molecule.gltf",
+      "scale": 2.8e-10,
+      "objectSize": 2.8e-10,
+      "size": "0.28 nm",
+      "model": "models/h2o_molecule.obj",
       "color": [0.2, 0.6, 0.9],
       "description": "H₂O - três átomos"
     },
     {
       "name": "Molécula de DNA",
-      "scale": 1e-8,
-      "size": "10 nanómetros",
+      "scale": 2.0e-9,
+      "objectSize": 2.0e-9,
+      "size": "2 nm (diâmetro hélice)",
       "model": "models/dna.obj",
       "color": [0.2, 0.8, 0.2],
       "description": "Dupla hélice - cadeia de moléculas"
     },
     {
       "name": "Vírus Pequeno",
-      "scale": 1e-7,
-      "size": "100 nanómetros",
+      "scale": 2.0e-8,
+      "objectSize": 2.0e-8,
+      "size": "20 nm",
       "model": "models/virus.obj",
       "color": [0.8, 0.2, 0.2],
       "description": "Cápsula de proteínas e DNA"
     },
     {
       "name": "Bactéria",
-      "scale": 1e-6,
-      "size": "1 micrómetro",
+      "scale": 2.0e-6,
+      "objectSize": 2.0e-6,
+      "size": "2 μm (E. coli)",
       "model": "models/bacteria.obj",
       "color": [0.3, 0.7, 0.3],
       "description": "Organismo unicelular"
     },
     {
       "name": "Célula Humana",
-      "scale": 1e-5,
-      "size": "10 micrómetros",
+      "scale": 1.0e-5,
+      "objectSize": 1.0e-5,
+      "size": "10 μm",
       "model": "models/cell.obj",
       "color": [0.2, 0.6, 0.8],
       "description": "Contém milhões de moléculas"
     },
     {
       "name": "Grão de Pólen",
-      "scale": 1e-4,
-      "size": "100 micrómetros",
+      "scale": 5.0e-5,
+      "objectSize": 5.0e-5,
+      "size": "50 μm",
       "model": "models/pollen.obj",
       "color": [0.9, 0.9, 0.3],
       "description": "Célula reprodutiva vegetal"
     },
     {
       "name": "Formiga",
-      "scale": 1e-3,
-      "size": "1 milímetro",
+      "scale": 3.0e-3,
+      "objectSize": 3.0e-3,
+      "size": "3 mm",
       "model": "models/ant.obj",
       "color": [0.3, 0.2, 0.1],
       "description": "Milhões de células"
     },
     {
       "name": "Abelha",
-      "scale": 1e-2,
-      "size": "1 centímetro",
+      "scale": 1.5e-2,
+      "objectSize": 1.5e-2,
+      "size": "1.5 cm",
       "model": "models/bee.obj",
       "color": [0.9, 0.7, 0.1],
       "description": "Inseto polinizador"
     },
     {
       "name": "Bola de Ténis",
-      "scale": 1e-1,
-      "size": "10 centímetros",
+      "scale": 6.7e-2,
+      "objectSize": 6.7e-2,
+      "size": "6.7 cm (diâmetro)",
       "model": "models/ball.obj",
       "color": [0.9, 0.9, 0.2],
       "description": "Objeto quotidiano"
     },
     {
       "name": "Pessoa",
-      "scale": 1e0,
-      "size": "1 metro",
+      "scale": 1.7,
+      "objectSize": 1.7,
+      "size": "1.7 m (altura média)",
       "model": "models/person.obj",
       "color": [0.9, 0.7, 0.6],
       "description": "Ser humano adulto"
     },
     {
       "name": "Árvore",
-      "scale": 1e1,
-      "size": "10 metros",
+      "scale": 20,
+      "objectSize": 20,
+      "size": "20 m",
       "model": "models/tree.obj",
       "color": [0.3, 0.6, 0.2],
       "description": "Organismo multicelular grande"
     },
     {
       "name": "Baleia Azul",
-      "scale": 1e2,
-      "size": "100 metros",
+      "scale": 30,
+      "objectSize": 30,
+      "size": "30 m",
       "model": "models/whale.obj",
       "color": [0.2, 0.4, 0.7],
       "description": "Maior animal do planeta"
     },
     {
       "name": "Montanha",
-      "scale": 1e3,
-      "size": "1 quilómetro",
+      "scale": 8849,
+      "objectSize": 8849,
+      "size": "8.849 km (Everest)",
       "model": "models/mountain.obj",
       "color": [0.6, 0.5, 0.4],
       "description": "Formação geológica"
     },
     {
       "name": "Cidade Pequena",
-      "scale": 1e4,
-      "size": "10 quilómetros",
+      "scale": 10000,
+      "objectSize": 10000,
+      "size": "10 km",
       "model": "models/town.obj",
       "color": [0.6, 0.6, 0.5],
       "description": "Assentamento humano"
     },
     {
       "name": "Grande Cidade",
-      "scale": 1e5,
-      "size": "100 quilómetros",
+      "scale": 50000,
+      "objectSize": 50000,
+      "size": "50 km",
       "model": "models/city.obj",
       "color": [0.7, 0.7, 0.3],
       "description": "Área metropolitana"
     },
     {
       "name": "Portugal",
-      "scale": 1e6,
-      "size": "1000 quilómetros",
+      "scale": 560000,
+      "objectSize": 560000,
+      "size": "560 km (comprimento)",
       "model": "models/country.obj",
       "color": [0.3, 0.7, 0.3],
       "description": "País de tamanho médio"
     },
     {
       "name": "Terra",
-      "scale": 1e7,
-      "size": "10,000 km (diâmetro)",
+      "scale": 12742000,
+      "objectSize": 12742000,
+      "size": "12,742 km (diâmetro)",
       "model": "models/earth.obj",
       "color": [0.2, 0.4, 0.8],
       "description": "Planeta rochoso"
     },
     {
       "name": "Júpiter",
-      "scale": 1e8,
-      "size": "100,000 km",
+      "scale": 139820000,
+      "objectSize": 139820000,
+      "size": "139,820 km",
       "model": "models/jupiter.obj",
       "color": [0.8, 0.6, 0.4],
       "description": "Gigante gasoso"
     },
     {
       "name": "Sol",
-      "scale": 1e9,
-      "size": "1 milhão km",
+      "scale": 1392700000,
+      "objectSize": 1392700000,
+      "size": "1,392,700 km",
       "model": "models/sun.obj",
       "color": [0.9, 0.9, 0.2],
       "description": "Estrela - 99.8% do sistema solar"
     },
     {
       "name": "Sistema Solar Interior",
-      "scale": 1e10,
-      "size": "10 milhões km",
+      "scale": 2.28e11,
+      "objectSize": 2.28e11,
+      "size": "228 milhões km (órbita Marte)",
       "model": "models/inner_solar.obj",
       "color": [0.8, 0.7, 0.5],
       "description": "Órbita de Marte"
     },
     {
       "name": "Sistema Solar",
-      "scale": 1e11,
-      "size": "100 milhões km",
+      "scale": 1.5e12,
+      "objectSize": 1.5e12,
+      "size": "1.5 mil milhões km (órbita Saturno)",
       "model": "models/solar_system.obj",
       "color": [0.7, 0.6, 0.5],
-      "description": "Órbita de Terra a Júpiter"
+      "description": "Órbita de Terra a Saturno"
     },
     {
       "name": "Órbita de Neptuno",
-      "scale": 1e12,
-      "size": "1 mil milhões km",
+      "scale": 4.5e12,
+      "objectSize": 4.5e12,
+      "size": "4.5 mil milhões km",
       "model": "models/neptune_orbit.obj",
       "color": [0.3, 0.4, 0.8],
       "description": "Limite do sistema planetário"
     },
     {
       "name": "Cintura de Kuiper",
-      "scale": 1e13,
-      "size": "10 mil milhões km",
+      "scale": 7.5e12,
+      "objectSize": 7.5e12,
+      "size": "7.5 mil milhões km",
       "model": "models/kuiper.obj",
       "color": [0.5, 0.5, 0.6],
       "description": "Objetos gelados trans-netunianos"
     },
     {
       "name": "Nuvem de Oort Interior",
-      "scale": 1e14,
+      "scale": 9.46e15,
+      "objectSize": 9.46e15,
       "size": "1 ano-luz",
       "model": "models/oort.obj",
       "color": [0.4, 0.4, 0.5],
@@ -204,7 +238,8 @@
     },
     {
       "name": "Nuvem de Oort Exterior",
-      "scale": 1e15,
+      "scale": 9.46e16,
+      "objectSize": 9.46e16,
       "size": "10 anos-luz",
       "model": "models/oort_outer.obj",
       "color": [0.3, 0.3, 0.4],
@@ -212,15 +247,17 @@
     },
     {
       "name": "Estrelas Próximas",
-      "scale": 1e16,
-      "size": "100 anos-luz",
+      "scale": 4e17,
+      "objectSize": 4e17,
+      "size": "40 anos-luz (Proxima Centauri 4.2 AL)",
       "model": "models/nearby_stars.obj",
       "color": [0.8, 0.8, 0.9],
       "description": "Vizinhança solar"
     },
     {
       "name": "Aglomerado Estelar",
-      "scale": 1e17,
+      "scale": 9.46e18,
+      "objectSize": 9.46e18,
       "size": "1000 anos-luz",
       "model": "models/star_cluster.obj",
       "color": [0.7, 0.7, 0.9],
@@ -228,15 +265,17 @@
     },
     {
       "name": "Nebulosa",
-      "scale": 1e18,
-      "size": "10,000 anos-luz",
+      "scale": 9.46e19,
+      "objectSize": 9.46e19,
+      "size": "10,000 anos-luz (Nebulosa de Órion)",
       "model": "models/nebula.obj",
       "color": [0.9, 0.3, 0.6],
       "description": "Nuvem de gás e poeira estelar"
     },
     {
       "name": "Braço Galáctico",
-      "scale": 1e19,
+      "scale": 9.46e20,
+      "objectSize": 9.46e20,
       "size": "100,000 anos-luz",
       "model": "models/galactic_arm.obj",
       "color": [0.6, 0.6, 0.8],
@@ -244,15 +283,17 @@
     },
     {
       "name": "Via Láctea",
-      "scale": 1e20,
-      "size": "1 milhão anos-luz",
+      "scale": 9.46e20,
+      "objectSize": 9.46e20,
+      "size": "100,000 anos-luz (diâmetro)",
       "model": "models/galaxy.obj",
       "color": [0.8, 0.8, 0.9],
       "description": "Nossa galáxia - 100 mil milhões de estrelas"
     },
     {
       "name": "Grupo Local",
-      "scale": 1e21,
+      "scale": 9.46e22,
+      "objectSize": 9.46e22,
       "size": "10 milhões anos-luz",
       "model": "models/local_group.obj",
       "color": [0.7, 0.5, 0.8],
@@ -260,11 +301,21 @@
     },
     {
       "name": "Superaglomerado de Virgem",
-      "scale": 1e22,
-      "size": "100 milhões anos-luz",
+      "scale": 1e24,
+      "objectSize": 1e24,
+      "size": "110 milhões anos-luz",
       "model": "models/supercluster.obj",
       "color": [0.6, 0.3, 0.8],
       "description": "Milhares de galáxias"
+    },
+    {
+      "name": "Ponto de Interrogação",
+      "scale": 1.0,
+      "objectSize": 1.0,
+      "size": "1 m (fallback)",
+      "model": "models/question_mark.obj",
+      "color": [1.0, 0.647, 0.0],
+      "description": "Fallback visual para modelos indisponíveis"
     }
   ]
 }

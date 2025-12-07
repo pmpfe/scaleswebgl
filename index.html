@@ -222,8 +222,8 @@
             right: 20px;
             width: 360px;
             max-height: 50vh;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             backdrop-filter: blur(10px);
             box-shadow: 0 0 16px rgba(0,0,0,0.4);
@@ -232,6 +232,15 @@
             cursor: default;
             user-select: none;
             z-index: 2000;
+            transition: all 0.3s ease;
+        }
+
+        #logWindow.collapsed {
+            max-height: 44px;
+        }
+
+        #logWindow.collapsed #logBody {
+            display: none;
         }
 
         #logHeader {
@@ -244,6 +253,26 @@
             align-items: center;
             gap: 8px;
             cursor: grab;
+        }
+
+        .log-toggle-btn {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            color: #fff;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .log-toggle-btn:hover {
+            background: rgba(255,255,255,0.2);
         }
 
         #logHeader:active {
@@ -311,14 +340,14 @@
         
         <div class="control-group">
             <label>
-                <input type="checkbox" id="autoRotate" checked>
+                <input type="checkbox" id="autoRotate">
                 Rotação Automática
             </label>
         </div>
         
         <div class="control-group">
             <label>
-                <input type="checkbox" id="wireframe" checked>
+                <input type="checkbox" id="wireframe">
                 Modo Wireframe
             </label>
         </div>
@@ -333,6 +362,7 @@
     
     <div id="info">
         <div class="scale-info">
+            <div><strong>Grelha:</strong> <span class="scale-value" id="gridScale">-</span></div>
             <div>Escala: <span class="scale-value" id="currentScale">-</span></div>
             <div>Objecto: <span class="object-name" id="currentObject">-</span></div>
             <div>Tamanho: <span id="currentSize">-</span></div>
@@ -345,7 +375,10 @@
     </div>
 
     <div id="logWindow">
-        <div id="logHeader">Logs (arraste para mover)</div>
+        <div id="logHeader">
+            <span id="logToggle" class="log-toggle-btn">-</span>
+            <span>Logs (arraste para mover)</span>
+        </div>
         <div id="logBody"></div>
     </div>
     
@@ -354,6 +387,7 @@
     <script src="js/gltfloader.js"></script>
     <script src="js/modelloader.js"></script>
     <script src="js/scaleobject.js"></script>
+    <script src="js/grid.js"></script>
     <script src="js/renderer.js"></script>
     <script src="js/animation.js"></script>
     <script src="js/main.js"></script>

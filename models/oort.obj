@@ -1,0 +1,86 @@
+# Exemplo: Esfera simples (planeta Terra)
+# Aproximação de uma esfera com linhas de latitude e longitude
+
+# Vértices (esfera simplificada)
+# Polo norte
+v 0.0 1.0 0.0
+
+# Latitude 1 (60°)
+v 0.866 0.5 0.0
+v 0.433 0.5 0.75
+v -0.433 0.5 0.75
+v -0.866 0.5 0.0
+v -0.433 0.5 -0.75
+v 0.433 0.5 -0.75
+
+# Equador
+v 1.0 0.0 0.0
+v 0.5 0.0 0.866
+v -0.5 0.0 0.866
+v -1.0 0.0 0.0
+v -0.5 0.0 -0.866
+v 0.5 0.0 -0.866
+
+# Latitude -1 (60°)
+v 0.866 -0.5 0.0
+v 0.433 -0.5 0.75
+v -0.433 -0.5 0.75
+v -0.866 -0.5 0.0
+v -0.433 -0.5 -0.75
+v 0.433 -0.5 -0.75
+
+# Polo sul
+v 0.0 -1.0 0.0
+
+# Linhas de latitude
+l 2 3
+l 3 4
+l 4 5
+l 5 6
+l 6 7
+l 7 2
+
+l 8 9
+l 9 10
+l 10 11
+l 11 12
+l 12 13
+l 13 8
+
+l 14 15
+l 15 16
+l 16 17
+l 17 18
+l 18 19
+l 19 14
+
+# Linhas de longitude
+l 1 2
+l 2 8
+l 8 14
+l 14 20
+
+l 1 3
+l 3 9
+l 9 15
+l 15 20
+
+l 1 4
+l 4 10
+l 10 16
+l 16 20
+
+l 1 5
+l 5 11
+l 11 17
+l 17 20
+
+l 1 6
+l 6 12
+l 12 18
+l 18 20
+
+l 1 7
+l 7 13
+l 13 19
+l 19 20

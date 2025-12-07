@@ -4,7 +4,8 @@
 class ScaleObject {
     constructor(config, index) {
         this.name = config.name;
-        this.scale = config.scale;
+        this.scale = config.scale;  // Escala da grelha (ordem de magnitude)
+        this.objectSize = config.objectSize || config.scale;  // Tamanho real do objeto em metros
         this.size = config.size;
         this.modelPath = config.model;
         this.color = config.color || [1.0, 1.0, 1.0];
@@ -15,6 +16,7 @@ class ScaleObject {
         this.indices = null;
         this.colors = null;
         this.loaded = false;
+        this.modelBoundingSize = 1.0;  // Tamanho do bounding box do modelo 3D
         
         // Buffers WebGL
         this.vertexBuffer = null;
@@ -23,20 +25,52 @@ class ScaleObject {
     }
     
     /**
-     * Carrega o modelo OBJ ou gera geometria procedural
+     * Carrega o modelo OBJ ou usa o ponto de interrogação como fallback
+     * Cadeia de tentativas:
+     * 1. Carrega modelo original
+     * 2. Se falhar, tenta modelo_fallback (automático)
+     * 3. Se falhar, usa ponto de interrogação (question_mark.obj)
      */
     async load(gl, modelLoader) {
         let usedFallback = false;
+        let fallbackType = 'none';
+        
+        console.log(`[ScaleObject] Tentando carregar: ${this.modelPath}`);
+        
         try {
             // Detecta e carrega modelo (OBJ, GLTF ou GLB)
+            // O ModelLoader já trata do fallback automático (ficheiro_fallback)
             const modelData = await modelLoader.load(this.modelPath);
             this.vertices = modelData.vertices;
             this.indices = modelData.indices;
             this.colors = modelData.colors || null;
+            
+            // Calcula bounding box do modelo
+            this.calculateBoundingBox();
+            
+            console.log(`✓ Carregado: ${this.name} (${this.vertices.length / 3} vértices, tamanho modelo: ${this.modelBoundingSize.toFixed(4)} unidades)`);
         } catch (error) {
-            usedFallback = true;
-            console.warn(`Não foi possível carregar ${this.modelPath}, usando geometria procedural:`, error);
-            this.generateProceduralGeometry();
+            console.warn(`Falha ao carregar ${this.modelPath}:`, error.message);
+            
+            // Usa o ponto de interrogação como fallback
+            try {
+                console.log(`[ScaleObject] Usando ponto de interrogação para ${this.name}`);
+                const questionMarkData = await modelLoader.load('models/question_mark.obj');
+                this.vertices = questionMarkData.vertices;
+                this.indices = questionMarkData.indices;
+                // Usa cor laranja para o ponto de interrogação
+                this.colors = questionMarkData.colors || null;
+                usedFallback = true;
+                fallbackType = 'question_mark';
+                
+                // Calcula bounding box
+                this.calculateBoundingBox();
+                
+                console.warn(`⚠️  Modelo não encontrado: ${this.modelPath} → Usando ponto de interrogação (${this.vertices.length / 3} vértices)`);
+            } catch (questionMarkError) {
+                console.error(`ERRO CRÍTICO: Não foi possível carregar ponto de interrogação:`, questionMarkError);
+                throw new Error(`Impossível carregar modelo ou fallback para ${this.name}`);
+            }
         }
         
         // Cria buffers WebGL
@@ -46,259 +80,41 @@ class ScaleObject {
         return {
             success: !usedFallback,
             usedFallback,
+            fallbackType,
             verticesCount: this.vertices ? this.vertices.length / 3 : 0
         };
     }
     
     /**
-     * Gera geometria procedural baseada no tipo de objeto
+     * Calcula o bounding box do modelo para determinar seu tamanho real
      */
-    generateProceduralGeometry() {
-        const type = this.getGeometryType();
-        
-        switch (type) {
-            case 'helix':
-                this.generateHelix();
-                break;
-            case 'icosahedron':
-                this.generateIcosahedron();
-                break;
-            case 'sphere':
-                this.generateSphere(16, 16);
-                break;
-            case 'cube':
-                this.generateCube();
-                break;
-            case 'torus':
-                this.generateTorus();
-                break;
-            case 'spiral':
-                this.generateSpiral();
-                break;
-            default:
-                this.generateSphere(16, 16);
+    calculateBoundingBox() {
+        if (!this.vertices) {
+            this.modelBoundingSize = 1.0;
+            return;
         }
-    }
-    
-    /**
-     * Determina o tipo de geometria baseado no nome do objeto
-     */
-    getGeometryType() {
-        const name = this.name.toLowerCase();
         
-        if (name.includes('dna') || name.includes('molécula')) return 'helix';
-        if (name.includes('vírus')) return 'icosahedron';
-        if (name.includes('célula') || name.includes('grão')) return 'sphere';
-        if (name.includes('edifício') || name.includes('cubo')) return 'cube';
-        if (name.includes('galáxia') || name.includes('via')) return 'spiral';
-        if (name.includes('sistema')) return 'torus';
+        let minX = Infinity, minY = Infinity, minZ = Infinity;
+        let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
         
-        return 'sphere';
-    }
-    
-    /**
-     * Gera uma dupla hélice (DNA)
-     */
-    generateHelix() {
-        const vertices = [];
-        const indices = [];
-        const turns = 4;
-        const segments = 100;
-        const radius = 0.3;
-        const height = 2.0;
-        
-        for (let i = 0; i <= segments; i++) {
-            const t = i / segments;
-            const angle = t * turns * Math.PI * 2;
-            const y = (t - 0.5) * height;
+        for (let i = 0; i < this.vertices.length; i += 3) {
+            const x = this.vertices[i];
+            const y = this.vertices[i + 1];
+            const z = this.vertices[i + 2];
             
-            // Primeira hélice
-            vertices.push(
-                Math.cos(angle) * radius,
-                y,
-                Math.sin(angle) * radius
-            );
-            
-            // Segunda hélice (oposta)
-            vertices.push(
-                Math.cos(angle + Math.PI) * radius,
-                y,
-                Math.sin(angle + Math.PI) * radius
-            );
-            
-            if (i < segments) {
-                const base = i * 2;
-                // Linhas da primeira hélice
-                indices.push(base, base + 2);
-                // Linhas da segunda hélice
-                indices.push(base + 1, base + 3);
-                // Conectores entre hélices
-                if (i % 5 === 0) {
-                    indices.push(base, base + 1);
-                }
-            }
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            minZ = Math.min(minZ, z);
+            maxX = Math.max(maxX, x);
+            maxY = Math.max(maxY, y);
+            maxZ = Math.max(maxZ, z);
         }
         
-        this.vertices = new Float32Array(vertices);
-        this.indices = new Uint16Array(indices);
-    }
-    
-    /**
-     * Gera um icosaedro (vírus)
-     */
-    generateIcosahedron() {
-        const t = (1.0 + Math.sqrt(5.0)) / 2.0;
-        
-        const vertices = new Float32Array([
-            -1,  t,  0,    1,  t,  0,   -1, -t,  0,    1, -t,  0,
-             0, -1,  t,    0,  1,  t,    0, -1, -t,    0,  1, -t,
-             t,  0, -1,    t,  0,  1,   -t,  0, -1,   -t,  0,  1
-        ]);
-        
-        const indices = new Uint16Array([
-            0,11,5,  0,5,1,   0,1,7,   0,7,10,  0,10,11,
-            1,5,9,   5,11,4,  11,10,2, 10,7,6,  7,1,8,
-            3,9,4,   3,4,2,   3,2,6,   3,6,8,   3,8,9,
-            4,9,5,   2,4,11,  6,2,10,  8,6,7,   9,8,1
-        ]);
-        
-        this.vertices = vertices;
-        this.indices = indices;
-    }
-    
-    /**
-     * Gera uma esfera
-     */
-    generateSphere(latBands, longBands) {
-        const vertices = [];
-        const indices = [];
-        
-        for (let lat = 0; lat <= latBands; lat++) {
-            const theta = lat * Math.PI / latBands;
-            const sinTheta = Math.sin(theta);
-            const cosTheta = Math.cos(theta);
-            
-            for (let long = 0; long <= longBands; long++) {
-                const phi = long * 2 * Math.PI / longBands;
-                const sinPhi = Math.sin(phi);
-                const cosPhi = Math.cos(phi);
-                
-                const x = cosPhi * sinTheta;
-                const y = cosTheta;
-                const z = sinPhi * sinTheta;
-                
-                vertices.push(x, y, z);
-            }
-        }
-        
-        for (let lat = 0; lat < latBands; lat++) {
-            for (let long = 0; long < longBands; long++) {
-                const first = (lat * (longBands + 1)) + long;
-                const second = first + longBands + 1;
-                
-                indices.push(first, second);
-                indices.push(first, first + 1);
-            }
-        }
-        
-        this.vertices = new Float32Array(vertices);
-        this.indices = new Uint16Array(indices);
-    }
-    
-    /**
-     * Gera um cubo
-     */
-    generateCube() {
-        const vertices = new Float32Array([
-            -1, -1,  1,   1, -1,  1,   1,  1,  1,  -1,  1,  1,
-            -1, -1, -1,   1, -1, -1,   1,  1, -1,  -1,  1, -1
-        ]);
-        
-        const indices = new Uint16Array([
-            0,1, 1,2, 2,3, 3,0,  // frente
-            4,5, 5,6, 6,7, 7,4,  // trás
-            0,4, 1,5, 2,6, 3,7   // conexões
-        ]);
-        
-        this.vertices = vertices;
-        this.indices = indices;
-    }
-    
-    /**
-     * Gera um torus
-     */
-    generateTorus() {
-        const vertices = [];
-        const indices = [];
-        const majorRadius = 1.0;
-        const minorRadius = 0.3;
-        const majorSegments = 32;
-        const minorSegments = 16;
-        
-        for (let i = 0; i <= majorSegments; i++) {
-            const u = i / majorSegments * Math.PI * 2;
-            const cu = Math.cos(u);
-            const su = Math.sin(u);
-            
-            for (let j = 0; j <= minorSegments; j++) {
-                const v = j / minorSegments * Math.PI * 2;
-                const cv = Math.cos(v);
-                const sv = Math.sin(v);
-                
-                const x = (majorRadius + minorRadius * cv) * cu;
-                const y = minorRadius * sv;
-                const z = (majorRadius + minorRadius * cv) * su;
-                
-                vertices.push(x, y, z);
-            }
-        }
-        
-        for (let i = 0; i < majorSegments; i++) {
-            for (let j = 0; j < minorSegments; j++) {
-                const a = i * (minorSegments + 1) + j;
-                const b = a + minorSegments + 1;
-                
-                indices.push(a, b);
-                indices.push(a, a + 1);
-            }
-        }
-        
-        this.vertices = new Float32Array(vertices);
-        this.indices = new Uint16Array(indices);
-    }
-    
-    /**
-     * Gera uma espiral (galáxia)
-     */
-    generateSpiral() {
-        const vertices = [];
-        const indices = [];
-        const arms = 3;
-        const pointsPerArm = 50;
-        
-        for (let arm = 0; arm < arms; arm++) {
-            const armAngle = (arm / arms) * Math.PI * 2;
-            
-            for (let i = 0; i <= pointsPerArm; i++) {
-                const t = i / pointsPerArm;
-                const angle = t * Math.PI * 4 + armAngle;
-                const radius = t * 2;
-                
-                const x = Math.cos(angle) * radius;
-                const y = (Math.random() - 0.5) * 0.2 * t;
-                const z = Math.sin(angle) * radius;
-                
-                vertices.push(x, y, z);
-                
-                if (i < pointsPerArm) {
-                    const idx = arm * (pointsPerArm + 1) + i;
-                    indices.push(idx, idx + 1);
-                }
-            }
-        }
-        
-        this.vertices = new Float32Array(vertices);
-        this.indices = new Uint16Array(indices);
+        // Tamanho é a maior dimensão do bounding box
+        const sizeX = maxX - minX;
+        const sizeY = maxY - minY;
+        const sizeZ = maxZ - minZ;
+        this.modelBoundingSize = Math.max(sizeX, sizeY, sizeZ);
     }
     
     /**
