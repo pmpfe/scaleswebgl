@@ -30,66 +30,79 @@
 - **Tipo**: Estrutura poliédrica com cauda
 - **Recomendação**: "Bacteriophage T4" ou icosaedro com cauda
 - **Sketchfab**: Procurar "virus 3d model" ou "bacteriophage"
+- **Gemini**: `virus_a.gltf`, `virus_b.gltf`
 
 ### 5. Bactéria (1e-6m)
 - **Tipo**: Rod ou espiral (E. coli, vibrio)
 - **Recomendação**: "Bacteria E. coli" cilindro arredondado
 - **Sketchfab**: "Escherichia coli" ou "bacteria cell"
+- **Gemini**: `bacteria_a.gltf`
 
 ### 6. Célula Humana (1e-5m)
 - **Tipo**: Esfera com organelos
 - **Recomendação**: "Human cell structure" com núcleo visível
 - **Sketchfab**: "animal cell 3d model"
+- **Gemini**: `cell_a.gltf`
 
 ### 7. Grão de Pólen (1e-4m)
 - **Tipo**: Esfera espinhosa
 - **Recomendação**: Esfera com bump/normal map ou triangulação
 - **Sketchfab**: "pollen grain" ou "flower pollen"
+- **Gemini**: `pollen_a.gltf`
 
 ### 8. Formiga (1e-3m)
 - **Tipo**: Inseto com corpo segmentado
 - **Recomendação**: Low-poly ant
 - **Sketchfab**: "Ant 3D model" - Quaternius tem versão excelente
+- **Gemini**: `ant_a.gltf`
 
 ### 9. Abelha (1e-2m)
 - **Tipo**: Inseto com asas
 - **Recomendação**: Low-poly bee
 - **Sketchfab**: "Bee 3D model" ou "Honeybee"
+- **Gemini**: `bee_a.gltf`
 
 ### 10. Bola de Ténis (1e-1m)
 - **Tipo**: Esfera com padrão
 - **Recomendação**: "Tennis ball" simples
 - **Quaternius**: Tem modelo low-poly perfeito
+- **Gemini**: `tennis_ball_a.gltf`
 
 ### 11. Pessoa (1e0m)
 - **Tipo**: Figura humana
 - **Recomendação**: Low-poly human model
 - **Quaternius**: "Character" models
+- **Gemini**: `person_a.gltf`
 
 ### 12. Árvore (1e1m)
 - **Tipo**: Árvore simplificada
 - **Recomendação**: Low-poly tree
 - **Quaternius**: "Tree" model
+- **Gemini**: `tree_a.gltf`
 
 ### 13. Baleia Azul (1e2m)
 - **Tipo**: Baleia alongada
 - **Recomendação**: "Blue whale" model
 - **Sketchfab**: Filtrar por baixa poly
+- **Gemini**: `whale_a.gltf`
 
 ### 14. Montanha (1e3m)
 - **Tipo**: Pico/cone montanhoso
 - **Recomendação**: Cone procedural ou modelo simplificado
 - **Buscar**: "Mountain terrain low poly"
+- **Gemini**: `mountain_a.gltf`
 
 ### 15. Cidade Pequena (1e4m)
 - **Tipo**: Cluster de edifícios
 - **Recomendação**: "City buildings" low-poly
 - **Sketchfab**: "Low poly city"
+- **Gemini**: `city_a.gltf`
 
 ### 16. Grande Cidade (1e5m)
 - **Tipo**: Skyline
 - **Recomendação**: Simplificado com alguns edifícios altos
 - **Buscar**: "City skyline low poly"
+- **Gemini**: `city_b.gltf`
 
 ### 17. Portugal (1e6m)
 - **Tipo**: Mapa ou silhueta
@@ -105,6 +118,7 @@
 - **Tipo**: Planeta com bandas
 - **Recomendação**: Esfera com shader procedural
 - **Buscar**: "Jupiter planet 3d"
+- **Gemini**: `jupiter_a.gltf`
 
 ### 20. Sol (1e9m)
 - **Tipo**: Esfera brilhante
@@ -115,6 +129,7 @@
 - **Tipo**: Órbitas e planetas
 - **Recomendação**: Diagrama simplificado
 - **Buscar**: "Solar system orrery"
+- **Gemini**: `solarsystem_a.gltf`
 
 ### 22. Sistema Solar (1e11m)
 - **Tipo**: Diagrama com órbitas
