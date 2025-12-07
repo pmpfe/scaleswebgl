@@ -138,24 +138,44 @@ class PowersOfTenApp {
         console.log('Carregando objetos...');
         this.logInfo('Carregando objetos...');
         
+        // Intercepta console.log temporariamente para capturar logs do ScaleObject
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const self = this;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const msg = args.join(' ');
+            if (msg.includes('✓ Carregado:') || msg.includes('tamanho modelo:')) {
+                self.logInfo(msg);
+            } else if (msg.includes('[ScaleObject]')) {
+                self.logInfo(msg.replace('[ScaleObject] ', ''));
+            }
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            const msg = args.join(' ');
+            if (msg.includes('⚠️') || msg.includes('Usando ponto de interrogação')) {
+                self.logWarn(msg);
+            }
+        };
+        
         for (let i = 0; i < this.config.scales.length; i++) {
             const scaleConfig = this.config.scales[i];
             const obj = new ScaleObject(scaleConfig, i);
             try {
                 const result = await obj.load(this.renderer.gl, this.modelLoader);
                 this.objects.push(obj);
-                const fmt = scaleConfig.model.split('.').pop();
-                if (result.success) {
-                    this.logInfo(`Carregado ${obj.name} (${fmt}, ${result.verticesCount} vértices)`);
-                } else {
-                    this.logWarn(`Fallback procedural para ${obj.name} (modelo: ${fmt}, erro no load)`);
-                }
-                console.log(`Objeto ${i + 1}/${this.config.scales.length} carregado: ${obj.name}`);
             } catch (err) {
-                this.objects.push(obj); // já gerou geometria procedural
+                this.objects.push(obj);
                 this.logError(`Erro ao carregar ${scaleConfig.name}: ${err.message}`);
             }
         }
+        
+        // Restaura console original
+        console.log = originalLog;
+        console.warn = originalWarn;
         
         console.log('Todos os objetos carregados!');
         this.logInfo('Todos os objetos carregados');
