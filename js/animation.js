@@ -22,8 +22,8 @@ class AnimationController {
         this.speed = 1.0;
         
         this.camera = {
-            distance: 5.0,
-            targetDistance: 5.0
+            distance: 8.0,
+            targetDistance: 8.0
         };
     }
     
@@ -31,7 +31,22 @@ class AnimationController {
      * Inicia a reprodução automática
      */
     play() {
-        this.isPlaying = true;
+        if (!this.isPlaying) {
+            this.isPlaying = true;
+            // Se não está em transição e não está no slider, inicia a transição
+            if (!this.isTransitioning && !this.isSliderControlled) {
+                // Se está no final, volta ao início
+                if (this.currentIndex >= this.objects.length - 1) {
+                    this.reset();
+                }
+                // Agenda a primeira transição
+                setTimeout(() => {
+                    if (this.isPlaying) {
+                        this.nextScale();
+                    }
+                }, 100);
+            }
+        }
     }
     
     /**
@@ -94,6 +109,36 @@ class AnimationController {
     }
     
     /**
+     * Salta imediatamente para uma escala sem animação encadeada
+     * Usado quando o utilizador clica num objeto da lista
+     */
+    jumpToScaleImmediate(targetIndex) {
+        if (targetIndex < 0 || targetIndex >= this.objects.length) return;
+        
+        // Cancela qualquer jump agendado
+        if (this._jumpTimeout) {
+            clearTimeout(this._jumpTimeout);
+            this._jumpTimeout = null;
+        }
+        
+        // Para qualquer animação em curso
+        this.isSliderControlled = false;
+        this.isPlaying = false;
+        
+        // Salta diretamente para o índice alvo
+        this.currentIndex = this.targetIndex;
+        this.targetIndex = targetIndex;
+        this.continuousPosition = targetIndex;
+        this.targetContinuousPosition = targetIndex;
+        this.isTransitioning = true;
+        this.transitionProgress = 0;
+        
+        // Calcula nova distância da câmera
+        const targetObject = this.objects[targetIndex];
+        this.camera.targetDistance = this.calculateCameraDistance(targetObject);
+    }
+    
+    /**
      * Agenda o próximo passo do salto
      * @private
      */
@@ -149,25 +194,13 @@ class AnimationController {
     
     /**
      * Calcula a distância ideal da câmera para um objeto
+     * Com o novo sistema de grelha, a câmera deve estar sempre à mesma distância
+     * porque a grelha é que muda de escala, não os objetos
      */
     calculateCameraDistance(object) {
-        // Distância base proporcional ao tamanho do objeto
-        let distance = 5.0;
-        
-        if (object.vertices) {
-            // Calcula o bounding box do objeto
-            let maxDist = 0;
-            for (let i = 0; i < object.vertices.length; i += 3) {
-                const x = object.vertices[i];
-                const y = object.vertices[i + 1];
-                const z = object.vertices[i + 2];
-                const dist = Math.sqrt(x * x + y * y + z * z);
-                maxDist = Math.max(maxDist, dist);
-            }
-            distance = maxDist * 2.5 * (object.scale / this.baseScale);
-        }
-        
-        return Math.max(3.0, Math.min(distance, 1e10)); // Limitar para evitar valores extremos
+        // Distância fixa que permite ver a grelha 10x10 com FOV=45°
+        // A grelha já se adapta, então a câmera fica sempre no mesmo sítio
+        return 8.0; // Distância que permite ver confortavelmente a grelha completa
     }
     
     /**
@@ -214,9 +247,6 @@ class AnimationController {
                     this.pause();
                 }
             }
-        } else if (this.isPlaying && !this.isTransitioning) {
-            // Inicia a primeira transição
-            this.nextScale();
         }
         
         // Calcula distância da câmera baseada na escala atual
@@ -252,12 +282,15 @@ class AnimationController {
     
     /**
      * Obtém informações para renderização
+     * Nova abordagem: grelha representa a escala, objetos têm dimensão física real
      */
     getRenderInfo() {
         const info = {
             objects: [],
             cameraDistance: this.camera.distance,
-            rotationAngle: this.rotationAngle
+            rotationAngle: this.rotationAngle,
+            gridScale: 1.0,  // Escala da grelha em metros
+            gridLabel: ''    // Label da grelha (ex: "1 nm", "10 μm")
         };
         
         // Determina o fator de transição
@@ -274,27 +307,40 @@ class AnimationController {
         }
         
         if (t < 0.001 && !this.isSliderControlled) {
-            // Apenas o objeto atual (sem interpolação)
+            // Apenas o objeto atual
+            const currentObject = this.getCurrentObject();
+            
+            // A grelha representa a ordem de magnitude do objeto
+            // Ex: átomo H (0.05nm) → grelha de 0.1nm (1e-10m)
+            info.gridScale = currentObject.scale;
+            
+            // O objeto é renderizado com tamanho relativo à grelha
+            // Precisa normalizar pelo tamanho do modelo 3D (bounding box)
+            // Exemplo: objectSize=1.7m, gridScale=2m, modelBoundingSize=2.0
+            // objectScaleInGrid = (1.7 / 2) / 2.0 = 0.425
+            const objectScaleInGrid = (currentObject.objectSize / info.gridScale) / (currentObject.modelBoundingSize || 1.0);
+            
             info.objects.push({
-                object: this.getCurrentObject(),
+                object: currentObject,
                 alpha: 1.0,
-                scale: this.getCurrentObject().scale / this.baseScale
+                scale: objectScaleInGrid
             });
         } else {
-            // Transição/interpolação entre dois objetos
+            // Transição entre dois objetos
             const currentObject = this.objects[this.currentIndex];
             const targetObject = this.objects[this.targetIndex];
             
-            const currentRelativeScale = currentObject.scale / this.baseScale;
-            const targetRelativeScale = targetObject.scale / this.baseScale;
+            // Durante a transição, a escala da grelha muda suavemente
+            // de currentObject.scale para targetObject.scale
+            const logCurrentScale = Math.log10(currentObject.scale);
+            const logTargetScale = Math.log10(targetObject.scale);
+            const logGridScale = logCurrentScale * (1.0 - t) + logTargetScale * t;
+            info.gridScale = Math.pow(10, logGridScale);
             
-            // Ambos os objetos interpolam de suas escalas ATUAIS para suas escalas FINAIS
-            // Objeto atual: de currentRelativeScale para (currentRelativeScale / targetRelativeScale)
-            // Objeto alvo: de targetRelativeScale para targetRelativeScale (já está no tamanho final renderizado)
-            
-            // Interpolação linear simples entre os tamanhos
-            const currentScale = currentRelativeScale * (1.0 - t) + (currentRelativeScale / targetRelativeScale) * t;
-            const targetScale = targetRelativeScale * (1.0 - t) + targetRelativeScale * t;
+            // Ambos os objetos são renderizados com tamanho relativo à grelha atual
+            // Normaliza pelo tamanho do bounding box de cada modelo
+            const currentScaleInGrid = (currentObject.objectSize / info.gridScale) / (currentObject.modelBoundingSize || 1.0);
+            const targetScaleInGrid = (targetObject.objectSize / info.gridScale) / (targetObject.modelBoundingSize || 1.0);
             
             // Fade out do objeto atual e fade in do objeto alvo
             const currentAlpha = 1.0 - t;
@@ -303,13 +349,13 @@ class AnimationController {
             info.objects.push({
                 object: currentObject,
                 alpha: currentAlpha,
-                scale: currentScale
+                scale: currentScaleInGrid
             });
             
             info.objects.push({
                 object: targetObject,
                 alpha: targetAlpha,
-                scale: targetScale
+                scale: targetScaleInGrid
             });
         }
         

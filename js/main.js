@@ -6,6 +6,7 @@ class PowersOfTenApp {
         this.canvas = null;
         this.renderer = null;
         this.modelLoader = null;
+        this.grid = null;
         this.objects = [];
         this.animation = null;
         this.config = null;
@@ -52,6 +53,7 @@ class PowersOfTenApp {
         this.ui.autoRotate = document.getElementById('autoRotate');
         this.ui.wireframe = document.getElementById('wireframe');
         this.ui.useModelColors = document.getElementById('useModelColors');
+        this.ui.gridScale = document.getElementById('gridScale');
         this.ui.currentScale = document.getElementById('currentScale');
         this.ui.currentObject = document.getElementById('currentObject');
         this.ui.currentSize = document.getElementById('currentSize');
@@ -64,6 +66,9 @@ class PowersOfTenApp {
         // Inicializa o renderizador
         this.renderer = new Renderer(this.canvas);
         this.modelLoader = new ModelLoader();
+        
+        // Inicializa a grelha
+        this.grid = new Grid(this.renderer.gl);
 
         // Inicializa logger
         this.initLogger();
@@ -95,9 +100,11 @@ class PowersOfTenApp {
         this.ui.scaleSlider.value = continuousPos;
         this.ui.scaleSliderValue.textContent = Math.round(continuousPos);
         
-        // Inicia o loop de renderização
+        // Inicia o loop de renderização (começa parado)
         this.isRunning = true;
+        this.animation.pause(); // Começa em pausa
         this.lastTime = performance.now();
+        this.updatePlayPauseButton(); // Atualiza o texto do botão para "▶ Play"
         this.render();
         
         console.log('Aplicação inicializada!');
@@ -131,24 +138,44 @@ class PowersOfTenApp {
         console.log('Carregando objetos...');
         this.logInfo('Carregando objetos...');
         
+        // Intercepta console.log temporariamente para capturar logs do ScaleObject
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const self = this;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const msg = args.join(' ');
+            if (msg.includes('✓ Carregado:') || msg.includes('tamanho modelo:')) {
+                self.logInfo(msg);
+            } else if (msg.includes('[ScaleObject]')) {
+                self.logInfo(msg.replace('[ScaleObject] ', ''));
+            }
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            const msg = args.join(' ');
+            if (msg.includes('⚠️') || msg.includes('Usando ponto de interrogação')) {
+                self.logWarn(msg);
+            }
+        };
+        
         for (let i = 0; i < this.config.scales.length; i++) {
             const scaleConfig = this.config.scales[i];
             const obj = new ScaleObject(scaleConfig, i);
             try {
                 const result = await obj.load(this.renderer.gl, this.modelLoader);
                 this.objects.push(obj);
-                const fmt = scaleConfig.model.split('.').pop();
-                if (result.success) {
-                    this.logInfo(`Carregado ${obj.name} (${fmt}, ${result.verticesCount} vértices)`);
-                } else {
-                    this.logWarn(`Fallback procedural para ${obj.name} (modelo: ${fmt}, erro no load)`);
-                }
-                console.log(`Objeto ${i + 1}/${this.config.scales.length} carregado: ${obj.name}`);
             } catch (err) {
-                this.objects.push(obj); // já gerou geometria procedural
+                this.objects.push(obj);
                 this.logError(`Erro ao carregar ${scaleConfig.name}: ${err.message}`);
             }
         }
+        
+        // Restaura console original
+        console.log = originalLog;
+        console.warn = originalWarn;
         
         console.log('Todos os objetos carregados!');
         this.logInfo('Todos os objetos carregados');
@@ -164,21 +191,21 @@ class PowersOfTenApp {
      * Configura eventos da UI
      */
     setupEvents() {
-        // Botão Play/Pause
+        // Botão Play/Pause - Usar método dedicado para sincronização
         this.ui.playPause.addEventListener('click', () => {
             if (this.animation.isPlaying) {
                 this.animation.pause();
-                this.ui.playPause.textContent = '▶ Play';
             } else {
                 this.animation.play();
-                this.ui.playPause.textContent = '⏸ Pause';
             }
+            // Sempre atualizar o botão após mudança
+            this.updatePlayPauseButton();
         });
         
         // Botão Reset
         this.ui.reset.addEventListener('click', () => {
             this.animation.reset();
-            this.ui.playPause.textContent = '▶ Play';
+            this.updatePlayPauseButton();
             this.updateUI();
         });
         
@@ -212,18 +239,23 @@ class PowersOfTenApp {
             this.animation.setAutoRotate(e.target.checked);
         });
         
-        // Modo wireframe
+        // Modo wireframe (desligado por defecto)
+        this.ui.wireframe.checked = false;
+        this.renderer.setWireframeMode(false);
         this.ui.wireframe.addEventListener('change', (e) => {
             this.renderer.setWireframeMode(e.target.checked);
         });
         
-        // Usar cores do modelo
+        // Usar cores do modelo (ligado por defecto)
+        window.useModelColors = true;
+        this.ui.useModelColors.checked = true;
         this.ui.useModelColors.addEventListener('change', (e) => {
             window.useModelColors = e.target.checked;
         });
         
-        // Inicializar flag global
-        window.useModelColors = false;
+        // Rotação automática (ligada por defecto)
+        this.ui.autoRotate.checked = true;
+        this.animation.setAutoRotate(true);
         
         // Teclas de atalho
         window.addEventListener('keydown', (e) => {
@@ -273,7 +305,7 @@ class PowersOfTenApp {
             // Click handler - salta para esta escala
             item.addEventListener('click', () => {
                 this.ui.scaleSlider.value = index;
-                this.animation.setContinuousPosition(index);
+                this.animation.jumpToScaleImmediate(index);
                 this.updateObjectListHighlight();
             });
             
@@ -315,11 +347,23 @@ class PowersOfTenApp {
     }
     
     /**
+     * Atualiza o estado do botão Play/Pause
+     */
+    updatePlayPauseButton() {
+        if (this.animation.isPlaying) {
+            this.ui.playPause.textContent = '⏸ Pause';
+        } else {
+            this.ui.playPause.textContent = '▶ Play';
+        }
+    }
+    
+    /**
      * Atualiza a interface
      */
     updateUI() {
         const currentIndex = this.animation.getCurrentIndex();
         const currentObject = this.objects[currentIndex];
+        const renderInfo = this.animation.getRenderInfo();
         
         if (currentObject) {
             this.ui.currentScale.textContent = currentObject.scale.toExponential(2);
@@ -327,9 +371,17 @@ class PowersOfTenApp {
             this.ui.currentSize.textContent = currentObject.size;
         }
         
+        // Atualiza a escala da grelha
+        if (this.ui.gridScale && renderInfo.gridScale) {
+            this.ui.gridScale.textContent = Grid.formatScale(renderInfo.gridScale);
+        }
+        
         // Atualiza estado dos botões
         this.ui.prevScale.disabled = currentIndex === 0;
         this.ui.nextScale.disabled = currentIndex === this.objects.length - 1;
+        
+        // Atualiza estado do botão Play/Pause
+        this.updatePlayPauseButton();
     }
     
     /**
@@ -394,6 +446,18 @@ class PowersOfTenApp {
         const up = vec3.fromValues(0, 1, 0);
         const viewMatrix = this.renderer.createViewMatrix(eye, center, up);
         
+        // Renderiza a grelha de referência
+        const gridMatrix = mat4.create();
+        // A grelha precisa preencher sempre a vista
+        // Com câmera a distance=5 e FOV=45°, a vista tem largura ~5 unidades
+        // A grelha tem 10 unidades (-5 a +5), então precisa de scale baseado na câmera
+        // Para sempre preencher: gridScale = cameraDistance * tan(FOV/2) * 2
+        const fov = 45 * Math.PI / 180;
+        const viewWidth = renderInfo.cameraDistance * Math.tan(fov / 2) * 2.0;
+        const gridVisualScale = viewWidth / 10.0; // Grelha de -5 a +5 = 10 unidades
+        mat4.scale(gridMatrix, gridMatrix, [gridVisualScale, gridVisualScale, gridVisualScale]);
+        this.grid.render(gl, this.renderer.shader, gridMatrix, viewMatrix, projectionMatrix);
+        
         // Renderiza cada objeto
         for (const item of renderInfo.objects) {
             const modelMatrix = mat4.create();
@@ -431,11 +495,29 @@ class PowersOfTenApp {
         this.logger = {
             drag: { active: false, offsetX: 0, offsetY: 0 },
             body: this.ui.logBody,
-            maxEntries: 200
+            maxEntries: 200,
+            collapsed: false
         };
         const header = this.ui.logHeader;
         const win = this.ui.logWindow;
         const drag = this.logger.drag;
+        const toggleBtn = document.getElementById('logToggle');
+
+        // Evento de toggle (colapsar/expandir)
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evita iniciar drag
+                this.logger.collapsed = !this.logger.collapsed;
+                if (this.logger.collapsed) {
+                    win.classList.add('collapsed');
+                    toggleBtn.textContent = '+';
+                } else {
+                    win.classList.remove('collapsed');
+                    toggleBtn.textContent = '-';
+                }
+            });
+        }
+
         header.addEventListener('mousedown', (e) => {
             drag.active = true;
             const rect = win.getBoundingClientRect();

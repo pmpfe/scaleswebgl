@@ -1,0 +1,155 @@
+# Ponto de Interrogação 3D - Cosmic Scales
+# Cor: Laranja (RGB: 255, 165, 0)
+# Estrutura: Curva superior, ponto, e haste
+
+# ===== PARTE SUPERIOR (PONTO DE INTERROGAÇÃO) =====
+
+# Curva do ponto de interrogação - seção 1 (topo arredondado)
+v 0.0 2.0 0.0
+v 0.3 2.0 0.0
+v 0.5 1.95 0.0
+v 0.6 1.85 0.0
+v 0.6 1.70 0.0
+v 0.5 1.60 0.0
+v 0.3 1.55 0.0
+v 0.0 1.55 0.0
+v -0.3 1.55 0.0
+v -0.5 1.60 0.0
+v -0.6 1.70 0.0
+v -0.6 1.85 0.0
+v -0.5 1.95 0.0
+v -0.3 2.0 0.0
+v -0.0 2.0 0.0
+
+# Curva do ponto de interrogação - seção 2 (meio, curva para dentro)
+v 0.0 1.40 0.0
+v 0.2 1.40 0.0
+v 0.3 1.35 0.0
+v 0.35 1.28 0.0
+v 0.35 1.15 0.0
+v 0.3 1.05 0.0
+v 0.2 0.98 0.0
+
+# Haste conectando (convergência)
+v 0.15 0.95 0.0
+v 0.1 0.90 0.0
+v 0.05 0.80 0.0
+v 0.0 0.70 0.0
+
+# ===== PARTE INFERIOR (PONTO) =====
+
+# Ponto grande na base - círculo frontal
+v 0.0 0.35 0.0
+v 0.15 0.35 0.0
+v 0.25 0.33 0.0
+v 0.3 0.28 0.0
+v 0.3 0.20 0.0
+v 0.25 0.12 0.0
+v 0.15 0.10 0.0
+v 0.0 0.10 0.0
+v -0.15 0.10 0.0
+v -0.25 0.12 0.0
+v -0.3 0.20 0.0
+v -0.3 0.28 0.0
+v -0.25 0.33 0.0
+v -0.15 0.35 0.0
+
+# Profundidade para o ponto (parte traseira)
+v 0.0 0.35 0.3
+v 0.15 0.35 0.3
+v 0.25 0.33 0.3
+v 0.3 0.28 0.3
+v 0.3 0.20 0.3
+v 0.25 0.12 0.3
+v 0.15 0.10 0.3
+v 0.0 0.10 0.3
+v -0.15 0.10 0.3
+v -0.25 0.12 0.3
+v -0.3 0.20 0.3
+v -0.3 0.28 0.3
+v -0.25 0.33 0.3
+v -0.15 0.35 0.3
+
+# ===== LINHAS PRINCIPAIS (Wireframe + algumas faces) =====
+
+# Arco superior do ponto de interrogação
+l 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+
+# Linha vertical conectando arco ao ponto
+l 15 26
+l 26 27
+l 27 28
+l 28 29
+l 29 30
+
+# Círculo do ponto (frente)
+l 31 32 33 34 35 36 37 38 39 40 41 42 43 44 31
+
+# Círculo do ponto (trás)
+l 45 46 47 48 49 50 51 52 53 54 55 56 57 58 45
+
+# Linhas conectando frente e trás
+l 31 45
+l 32 46
+l 33 47
+l 34 48
+l 35 49
+l 36 50
+l 37 51
+l 38 52
+l 39 53
+l 40 54
+l 41 55
+l 42 56
+l 43 57
+l 44 58
+
+# ===== FACES (triângulos para o ponto sólido) =====
+
+# Topo do ponto (cone frontal)
+f 31 32 33
+f 31 33 34
+f 31 34 35
+f 31 35 36
+f 31 36 37
+f 31 37 38
+f 31 38 39
+f 31 39 40
+f 31 40 41
+f 31 41 42
+f 31 42 43
+f 31 43 44
+
+# Topo do ponto (cone traseiro)
+f 45 46 47
+f 45 47 48
+f 45 48 49
+f 45 49 50
+f 45 50 51
+f 45 51 52
+f 45 52 53
+f 45 53 54
+f 45 54 55
+f 45 55 56
+f 45 56 57
+f 45 57 58
+
+# Lateral do ponto (conectando frente e trás)
+f 31 32 46 45
+f 32 33 47 46
+f 33 34 48 47
+f 34 35 49 48
+f 35 36 50 49
+f 36 37 51 50
+f 37 38 52 51
+f 38 39 53 52
+f 39 40 54 53
+f 40 41 55 54
+f 41 42 56 55
+f 42 43 57 56
+f 43 44 58 57
+f 44 31 45 58
+
+# ===== CORES (Laranja: RGB 1.0, 0.647, 0.0) =====
+# Nota: Cores aplicadas via config.json, mas documentadas aqui
+# Cor: [1.0, 0.647, 0.0] = Laranja vibrante
